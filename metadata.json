@@ -1,0 +1,7 @@
+{
+  "name": "HuntProperty App",
+  "description": "A modern, AI-powered real estate application for finding, listing, and managing properties.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
