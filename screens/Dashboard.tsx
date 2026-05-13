@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Plus, Eye, MessageCircle, ChevronRight, Zap, ShieldCheck, Star, 
-  BarChart, Settings, Bell, Crown, ArrowUpRight, FileText, Camera, CheckCircle
+  BarChart, Settings, Bell, Crown, ArrowUpRight, FileText, Camera, CheckCircle,
+  Building2, Layers, UserCheck, CalendarCheck, Users
 } from 'lucide-react';
 import { Button, Badge } from '../components/UI';
 
@@ -17,11 +18,10 @@ export const DashboardScreen = () => {
     { label: 'Total Leads', value: '84', sub: '15 New', icon: MessageCircle, color: 'text-purple-600', bg: 'bg-purple-50' },
   ];
 
-  const services = [
-    { id: 1, title: 'Valuation', desc: 'Get price estimate', icon: BarChart, color: 'bg-blue-100 text-blue-600' },
-    { id: 2, title: 'Ad Boost', desc: 'Rank higher', icon: Zap, color: 'bg-yellow-100 text-yellow-600' },
-    { id: 3, title: 'Legal', desc: 'RERA support', icon: ShieldCheck, color: 'bg-green-100 text-green-600' },
-    { id: 4, title: 'Featured', desc: 'Get spotlight', icon: Star, color: 'bg-purple-100 text-purple-600' },
+  const dashboardModules = [
+    { id: 1, title: 'Contacts/Responses', desc: 'Viewed Leads', icon: UserCheck, color: 'bg-red-50 text-red-500', path: '/contacts' },
+    { id: 2, title: 'Properties', desc: 'Manage Properties', icon: Building2, color: 'bg-green-50 text-green-500', path: '/my-listings' },
+    { id: 3, title: 'Bookings', desc: 'View Clients', icon: CalendarCheck, color: 'bg-purple-50 text-purple-500', path: '/orders' },
   ];
 
   const responses = [
@@ -64,32 +64,71 @@ export const DashboardScreen = () => {
            ))}
         </div>
 
-        <div className="flex gap-3">
-           <Button fullWidth className="shadow-lg shadow-primary/30" onClick={() => navigate('/add')}>
-             <Plus size={18} /> Add Property
-           </Button>
-           <Button variant="outline" onClick={() => navigate('/my-listings')} className="flex-1 border-gray-200 bg-gray-50">
-             My Listings
+        <div className="space-y-4">
+           {/* Primary Action Cards */}
+           <div className="grid grid-cols-2 gap-4">
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={() => navigate('/add')}
+                className="relative overflow-hidden bg-[#2FED9A] p-5 rounded-3xl flex flex-col items-start gap-4 shadow-xl shadow-[#2FED9A]/20 border border-white/20 group"
+              >
+                <div className="bg-white/30 p-2.5 rounded-2xl backdrop-blur-md group-hover:scale-110 transition-transform">
+                  <Plus size={24} className="text-gray-900" />
+                </div>
+                <div>
+                   <p className="font-black text-gray-900 text-sm">Post Property</p>
+                   <p className="text-[9px] text-gray-800/60 font-bold uppercase tracking-wider mt-0.5">Individual Units</p>
+                </div>
+                <div className="absolute -bottom-4 -right-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
+                   <FileText size={80} />
+                </div>
+              </motion.button>
+
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={() => navigate('/add-project')}
+                className="relative overflow-hidden bg-[#00AEEF] p-5 rounded-3xl flex flex-col items-start gap-4 shadow-xl shadow-[#00AEEF]/20 border border-white/20 group text-white"
+              >
+                <div className="bg-white/20 p-2.5 rounded-2xl backdrop-blur-md group-hover:scale-110 transition-transform">
+                  <Building2 size={24} className="text-white" />
+                </div>
+                <div className="text-left">
+                   <p className="font-black text-sm leading-tight">Post Project</p>
+                   <p className="text-[9px] text-white/60 font-bold uppercase tracking-wider mt-0.5">Society & Comm.</p>
+                </div>
+                <div className="absolute -bottom-4 -right-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
+                   <Building2 size={80} />
+                </div>
+              </motion.button>
+           </div>
+
+           <Button variant="outline" onClick={() => navigate('/my-listings')} className="w-full border-gray-200 bg-white py-4 rounded-2xl shadow-sm hover:shadow-md transition-all">
+             <Layers size={18} className="mr-2 text-primary" /> 
+             <span className="font-bold text-gray-700">Manage Listings & Projects</span>
            </Button>
         </div>
       </div>
 
       <div className="px-5 pt-6 space-y-8">
         
-        {/* Services Section */}
+        {/* Dashboard Modules Section */}
         <div>
           <div className="flex items-center justify-between mb-3 px-1">
-            <h2 className="font-bold text-lg text-gray-900">Services We Offer</h2>
+            <h2 className="font-bold text-lg text-gray-900">Dashboard</h2>
             <button className="text-xs font-bold text-primary">View All</button>
           </div>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 -mx-5 px-5">
-             {services.map(s => (
-               <div key={s.id} className="min-w-[140px] bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col items-start hover:shadow-md transition-shadow cursor-pointer">
-                  <div className={`p-2.5 rounded-xl ${s.color} mb-3`}>
-                    <s.icon size={20} />
+             {dashboardModules.map(m => (
+               <div 
+                 key={m.id} 
+                 onClick={() => navigate(m.path)}
+                 className="min-w-[150px] bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col items-start hover:shadow-md transition-all cursor-pointer group"
+               >
+                  <div className={`p-3 rounded-2xl ${m.color} mb-4 group-hover:scale-110 transition-transform`}>
+                    <m.icon size={22} />
                   </div>
-                  <h3 className="font-bold text-sm text-gray-900">{s.title}</h3>
-                  <p className="text-[10px] text-gray-500 mt-0.5">{s.desc}</p>
+                  <h3 className="font-black text-sm text-gray-900 leading-tight">{m.title}</h3>
+                  <p className="text-[10px] text-gray-500 mt-1 font-medium">{m.desc}</p>
                </div>
              ))}
           </div>

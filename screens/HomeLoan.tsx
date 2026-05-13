@@ -28,7 +28,7 @@ export const HomeLoanScreen: React.FC = () => {
     if (!formData.email.trim()) newErrors.email = "Email is required";
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
     if (!formData.address.trim()) newErrors.address = "Address is required";
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -59,36 +59,36 @@ export const HomeLoanScreen: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <Input 
-            label="Full Name" 
-            name="name" 
-            placeholder="John Doe" 
-            value={formData.name} 
-            onChange={handleChange} 
+          <Input
+            label="Full Name"
+            name="name"
+            placeholder="John Doe"
+            value={formData.name}
+            onChange={handleChange}
             error={errors.name}
           />
-          <Input 
-            label="Email Address" 
-            name="email" 
+          <Input
+            label="Email Address"
+            name="email"
             type="email"
-            placeholder="john@example.com" 
-            value={formData.email} 
-            onChange={handleChange} 
+            placeholder="john@example.com"
+            value={formData.email}
+            onChange={handleChange}
             error={errors.email}
           />
-          <Input 
-            label="Phone Number" 
-            name="phone" 
+          <Input
+            label="Phone Number"
+            name="phone"
             type="tel"
-            placeholder="+91 98765 43210" 
-            value={formData.phone} 
-            onChange={handleChange} 
+            placeholder="+91 98765 43210"
+            value={formData.phone}
+            onChange={handleChange}
             error={errors.phone}
           />
-          
+
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-gray-500 ml-1 uppercase tracking-wider">Address</label>
-            <textarea 
+            <textarea
               name="address"
               placeholder="Enter your current address"
               value={formData.address}
@@ -101,7 +101,7 @@ export const HomeLoanScreen: React.FC = () => {
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-gray-500 ml-1 uppercase tracking-wider">Loan Type</label>
             <div className="relative">
-              <select 
+              <select
                 name="loanType"
                 value={formData.loanType}
                 onChange={handleChange}
@@ -127,12 +127,12 @@ export const HomeLoanScreen: React.FC = () => {
       {/* Success Modal */}
       <AnimatePresence>
         {showSuccess && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
+          <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             />
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-3xl p-8 w-full max-w-xs relative z-10 text-center shadow-2xl"
             >

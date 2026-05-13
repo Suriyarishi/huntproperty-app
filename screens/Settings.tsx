@@ -2,15 +2,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowLeft, User, Smartphone, Mail, ShieldCheck, List, CreditCard, 
+import {
+  ArrowLeft, User, Smartphone, Mail, ShieldCheck, List, CreditCard,
   Lock, Bell, EyeOff, Moon, Globe, HelpCircle, LogOut, Trash2, ChevronRight, AlertTriangle, Info, ShoppingBag
 } from 'lucide-react';
 import { Toggle, Button } from '../components/UI';
 
 export const SettingsScreen: React.FC = () => {
   const navigate = useNavigate();
-  
+
   // Modals State
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -22,7 +22,7 @@ export const SettingsScreen: React.FC = () => {
     priceDrop: true,
     alerts: true
   });
-  
+
   const [privacy, setPrivacy] = useState({
     appLock: false,
     hideProfile: false
@@ -43,22 +43,22 @@ export const SettingsScreen: React.FC = () => {
     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 mt-6 px-2">{children}</h3>
   );
 
-  const SettingsItem = ({ 
-    icon: Icon, 
-    label, 
-    subLabel, 
-    onClick, 
+  const SettingsItem = ({
+    icon: Icon,
+    label,
+    subLabel,
+    onClick,
     rightElement,
-    destructive = false 
-  }: { 
-    icon: any, 
-    label: string, 
-    subLabel?: string, 
-    onClick?: () => void, 
+    destructive = false
+  }: {
+    icon: any,
+    label: string,
+    subLabel?: string,
+    onClick?: () => void,
     rightElement?: React.ReactNode,
     destructive?: boolean
   }) => (
-    <div 
+    <div
       onClick={onClick}
       className={`flex items-center justify-between p-3.5 mb-2 rounded-xl bg-white border border-gray-100 shadow-sm active:scale-[0.99] transition-all ${onClick ? 'cursor-pointer hover:border-primary/30' : ''}`}
     >
@@ -94,7 +94,7 @@ export const SettingsScreen: React.FC = () => {
           <SettingsItem icon={User} label="Edit Profile" subLabel="Name, Bio, Avatar" onClick={() => navigate('/edit-profile')} />
           <SettingsItem icon={Smartphone} label="Update Mobile Number" subLabel="+1 555 *** **99" onClick={() => navigate('/edit-profile')} />
           <SettingsItem icon={Mail} label="Update Email" subLabel="alex.j@example.com" onClick={() => navigate('/edit-profile')} />
-          <SettingsItem icon={ShieldCheck} label="KYC Verification" subLabel="Verified Badge: Active" onClick={() => {}} />
+          <SettingsItem icon={ShieldCheck} label="KYC Verification" subLabel="Verified Badge: Active" onClick={() => { }} />
         </div>
 
         {/* Account Section */}
@@ -109,61 +109,61 @@ export const SettingsScreen: React.FC = () => {
         {/* Notifications */}
         <SectionTitle>Notifications</SectionTitle>
         <div className="bg-white rounded-2xl p-1 shadow-sm border border-gray-100/50">
-          <SettingsItem 
-            icon={Bell} 
-            label="Push Notifications" 
-            rightElement={<Toggle checked={notifications.push} onChange={() => handleToggle('notifications', 'push')} />} 
+          <SettingsItem
+            icon={Bell}
+            label="Push Notifications"
+            rightElement={<Toggle checked={notifications.push} onChange={() => handleToggle('notifications', 'push')} />}
           />
-          <SettingsItem 
-            icon={AlertTriangle} 
-            label="Price Drop Alerts" 
-            rightElement={<Toggle checked={notifications.priceDrop} onChange={() => handleToggle('notifications', 'priceDrop')} />} 
+          <SettingsItem
+            icon={AlertTriangle}
+            label="Price Drop Alerts"
+            rightElement={<Toggle checked={notifications.priceDrop} onChange={() => handleToggle('notifications', 'priceDrop')} />}
           />
-          <SettingsItem 
-            icon={Mail} 
-            label="Email Updates" 
-            rightElement={<Toggle checked={notifications.email} onChange={() => handleToggle('notifications', 'email')} />} 
+          <SettingsItem
+            icon={Mail}
+            label="Email Updates"
+            rightElement={<Toggle checked={notifications.email} onChange={() => handleToggle('notifications', 'email')} />}
           />
         </div>
 
         {/* Privacy & Security */}
         <SectionTitle>Privacy & Security</SectionTitle>
         <div className="bg-white rounded-2xl p-1 shadow-sm border border-gray-100/50">
-          <SettingsItem 
-            icon={Lock} 
-            label="App Lock" 
+          <SettingsItem
+            icon={Lock}
+            label="App Lock"
             subLabel="Biometric / PIN"
-            rightElement={<Toggle checked={privacy.appLock} onChange={() => handleToggle('privacy', 'appLock')} />} 
+            rightElement={<Toggle checked={privacy.appLock} onChange={() => handleToggle('privacy', 'appLock')} />}
           />
-           <SettingsItem 
-            icon={EyeOff} 
-            label="Hide Profile" 
+          <SettingsItem
+            icon={EyeOff}
+            label="Hide Profile"
             subLabel="Visible only to contacts"
-            rightElement={<Toggle checked={privacy.hideProfile} onChange={() => handleToggle('privacy', 'hideProfile')} />} 
+            rightElement={<Toggle checked={privacy.hideProfile} onChange={() => handleToggle('privacy', 'hideProfile')} />}
           />
         </div>
 
         {/* General */}
         <SectionTitle>General</SectionTitle>
         <div className="bg-white rounded-2xl p-1 shadow-sm border border-gray-100/50">
-          <SettingsItem 
-             icon={Globe} 
-             label="Language" 
-             subLabel={general.language}
-             onClick={() => {}} 
+          <SettingsItem
+            icon={Globe}
+            label="Language"
+            subLabel={general.language}
+            onClick={() => { }}
           />
-          <SettingsItem 
-            icon={Moon} 
-            label="Dark Mode" 
-            rightElement={<Toggle checked={general.darkMode} onChange={() => handleToggle('general', 'darkMode')} />} 
+          <SettingsItem
+            icon={Moon}
+            label="Dark Mode"
+            rightElement={<Toggle checked={general.darkMode} onChange={() => handleToggle('general', 'darkMode')} />}
           />
         </div>
 
         {/* Support */}
         <SectionTitle>Support</SectionTitle>
         <div className="bg-white rounded-2xl p-1 shadow-sm border border-gray-100/50">
-          <SettingsItem icon={HelpCircle} label="Help Center" onClick={() => {}} />
-          <SettingsItem icon={Info} label="About App" subLabel="v2.5.0" onClick={() => {}} />
+          <SettingsItem icon={HelpCircle} label="Help Center" onClick={() => { }} />
+          <SettingsItem icon={Info} label="About App" subLabel="v2.5.0" onClick={() => { }} />
         </div>
 
         {/* Danger Zone */}
@@ -174,20 +174,20 @@ export const SettingsScreen: React.FC = () => {
         </div>
 
         <div className="text-center mt-8 mb-4">
-           <p className="text-[10px] text-gray-400 font-medium">HuntProperty v2.5.0 (Build 2024)</p>
+          <p className="text-[10px] text-gray-400 font-medium">HuntProperty v2.5.0 (Build 2024)</p>
         </div>
       </div>
 
       {/* Logout Modal */}
       <AnimatePresence>
         {showLogoutModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
+          <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setShowLogoutModal(false)}
             />
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
               className="bg-white rounded-3xl p-6 w-full max-w-xs relative z-10 shadow-2xl"
             >
@@ -210,13 +210,13 @@ export const SettingsScreen: React.FC = () => {
       {/* Delete Account Modal */}
       <AnimatePresence>
         {showDeleteModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-             <motion.div 
+          <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setShowDeleteModal(false)}
             />
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
               className="bg-white rounded-3xl p-6 w-full max-w-xs relative z-10 shadow-2xl"
             >
@@ -228,9 +228,9 @@ export const SettingsScreen: React.FC = () => {
                 This will permanently delete your profile, listings, and chat history. This action cannot be undone.
               </p>
               <div className="flex flex-col gap-3">
-                <Button 
-                  className="bg-red-500 hover:bg-red-600 text-white shadow-red-200" 
-                  fullWidth 
+                <Button
+                  className="bg-red-500 hover:bg-red-600 text-white shadow-red-200"
+                  fullWidth
                   onClick={() => { setShowDeleteModal(false); alert('Account scheduled for deletion.'); }}
                 >
                   Delete Permanently

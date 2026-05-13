@@ -1,193 +1,102 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Plus, Eye, MessageCircle, Heart, Edit2, Trash2, Rocket, MoreVertical, AlertCircle, Layers, X, Check, Zap, Star, Crown } from 'lucide-react';
+import { ArrowLeft, Plus, Eye, Image as ImageIcon, Heart, Search, CheckSquare, Square, Building2, SlidersHorizontal, MapPin, Edit2, Trash2, ChevronRight } from 'lucide-react';
 import { Property } from '../types';
-import { Button, Badge } from '../components/UI';
+import { Button } from '../components/UI';
 
-// Mock Data specific to User's Listings
-const MY_PROPERTIES: Property[] = [
+// Mock Data
+const MY_PROPERTIES = [
+  { id: '395', title: 'For Sell, Property Location, sada, dadas', address: 'Carnicobar, Andaman & Nicobar Islands', price: '₹ 20 Lacs', area: '1200 Sq-ft', posted: '03 May, 2021', edited: '03 Jun, 2021', views: 2, status: 'Deactivated', image: '' },
+  { id: '394', title: 'For Sell, Property Location, delhi, dehi', address: 'Changlang, Arunachal Pradesh', price: '₹ false', area: 'null Sq-ft', posted: '03 May, 2021', edited: '03 Jun, 2021', views: 0, status: 'Deactivated', image: '' },
+  { id: '393', title: 'For Sell, Property Location, Delhi, Delhi', address: 'Delhi, Delhi', price: '₹ false', area: 'null Sq-ft', posted: '03 May, 2021', edited: '03 Jun, 2021', views: 5, status: 'Deactivated', image: '' },
+];
+
+const MY_PROJECTS = [
   {
-    id: 'mp1',
-    title: 'Green Valley Apartment',
-    price: 250000,
-    type: 'Apartment',
-    bhk: 3,
-    area: 1500,
-    address: '45 Green Way',
-    city: 'Austin',
-    images: ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=800&auto=format&fit=crop'],
-    description: 'Spacious apartment with great views of the valley.',
-    features: ['Balcony'],
-    owner: { id: 'me', name: 'Me', contact: '', verified: true, avatar: '' },
-    coordinates: { lat: 0, lng: 0 },
-    status: 'Active',
-    stats: { views: 1240, leads: 12, saved: 45 },
-    createdAt: Date.now() - 86400000 * 2
+    id: 'PRJ-001',
+    title: 'Skyline Residential Plots',
+    address: 'Sector 150, Noida',
+    type: 'RESIDENTIAL',
+    price: '₹85 L - ₹2.5 Cr',
+    listedOn: 'Mar 05, 2026',
+    views: 124,
+    status: 'ACTIVE',
+    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop'
   },
   {
-    id: 'mp2',
-    title: 'Sunrise Villa Plot',
-    price: 120000,
-    type: 'Plot',
-    bhk: 0,
-    area: 2400,
-    address: 'Sector 4',
-    city: 'Austin',
-    images: ['https://images.unsplash.com/photo-1524813686514-a5756c97759e?q=80&w=800&auto=format&fit=crop'],
-    description: 'Corner plot facing the park.',
-    features: [],
-    owner: { id: 'me', name: 'Me', contact: '', verified: true, avatar: '' },
-    coordinates: { lat: 0, lng: 0 },
-    status: 'Pending',
-    stats: { views: 45, leads: 0, saved: 2 },
-    createdAt: Date.now() - 3600000
-  },
-  {
-    id: 'mp3',
-    title: 'Old Town Studio',
-    price: 90000,
-    type: 'Apartment',
-    bhk: 1,
-    area: 600,
-    address: 'Main St',
-    city: 'Austin',
-    images: ['https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=800&auto=format&fit=crop'],
-    description: 'Cozy studio in the heart of the city.',
-    features: [],
-    owner: { id: 'me', name: 'Me', contact: '', verified: true, avatar: '' },
-    coordinates: { lat: 0, lng: 0 },
-    status: 'Rejected',
-    stats: { views: 10, leads: 0, saved: 0 },
-    createdAt: Date.now() - 86400000 * 10
+    id: 'PRJ-002',
+    title: 'Nexus Business Tower',
+    address: 'Cyber City, Gurugram',
+    type: 'COMMERCIAL',
+    price: '₹1.2 Cr - ₹5.0 Cr',
+    listedOn: 'Mar 02, 2026',
+    views: 124,
+    status: 'UNDER REVIEW',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop'
   }
 ];
 
-interface BoostPlan {
-  id: string;
-  name: string;
-  price: number;
-  duration: string;
-  benefits: string[];
-  icon: any;
-  color: string;
-  accent: string;
-}
+const TABS = ['Properties', 'Projects', 'Bulk Edit', 'Favorites'];
 
-const BOOST_PLANS: BoostPlan[] = [
-  {
-    id: 'basic',
-    name: 'Starter',
-    price: 9,
-    duration: '3 Days',
-    benefits: ['Highlighted Border', 'Standard Visibility'],
-    icon: Zap,
-    color: 'bg-blue-100',
-    accent: 'text-blue-600'
-  },
-  {
-    id: 'gold',
-    name: 'Gold',
-    price: 29,
-    duration: '7 Days',
-    benefits: ['Top of Search', 'Email Newsletter', 'Verified Badge'],
-    icon: Star,
-    color: 'bg-yellow-100',
-    accent: 'text-yellow-600'
-  },
-  {
-    id: 'platinum',
-    name: 'Platinum',
-    price: 99,
-    duration: '30 Days',
-    benefits: ['Homepage Spotlight', 'Social Media Ad', 'Premium Support'],
-    icon: Crown,
-    color: 'bg-purple-100',
-    accent: 'text-purple-600'
-  }
-];
-
-interface Props {
-  properties?: Property[];
-}
-
-export const MyListings: React.FC<Props> = ({ properties = MY_PROPERTIES }) => {
+export const MyListings: React.FC = () => {
   const navigate = useNavigate();
-  const [filter, setFilter] = useState<'All' | 'Active' | 'Pending' | 'Rejected' | 'Expired'>('All');
-  const [listings, setListings] = useState<Property[]>(properties);
-  const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
-  
-  // Boost State
-  const [showBoostModal, setShowBoostModal] = useState<string | null>(null);
-  const [selectedPlan, setSelectedPlan] = useState('gold');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [activeTab, setActiveTab] = useState('Properties');
+  const [selectedProps, setSelectedProps] = useState<string[]>([]);
 
-  const filteredListings = filter === 'All' 
-    ? listings 
-    : listings.filter(p => p.status === filter);
+  const toggleSelect = (id: string) => {
+    setSelectedProps(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
+  };
 
-  const handleDelete = () => {
-    if (showDeleteModal) {
-      setListings(prev => prev.filter(p => p.id !== showDeleteModal));
-      setShowDeleteModal(null);
+  const selectAll = () => {
+    if (selectedProps.length === MY_PROPERTIES.length) {
+      setSelectedProps([]);
+    } else {
+      setSelectedProps(MY_PROPERTIES.map(p => p.id));
     }
   };
 
-  const handleBoostClick = (id: string) => {
-    setShowBoostModal(id);
-    setSelectedPlan('gold'); // Default
-  };
-
-  const confirmBoost = () => {
-    setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setShowBoostModal(null);
-      alert("Boost Activated! Your property is now being promoted.");
-    }, 2000);
-  };
-
-  const getStatusColor = (status?: string) => {
-    switch (status) {
-      // Using exact requested hex codes
-      case 'Active': return 'bg-[#2FED9A] text-black shadow-md'; 
-      case 'Pending': return 'bg-[#FFB900] text-black shadow-md'; 
-      case 'Rejected': return 'bg-[#FF4E4E] text-white shadow-md'; 
-      case 'Expired': return 'bg-[#7C7C7C] text-white shadow-md'; 
-      default: return 'bg-gray-100 text-gray-600';
-    }
+  const getStatusColor = (status: string) => {
+    return status === 'Deactivated' ? 'bg-red-50 text-[#E11D48]' : 'bg-green-50 text-green-600';
   };
 
   return (
-    <div className="h-full overflow-y-auto no-scrollbar bg-gray-50 relative">
+    <div className="h-full overflow-y-auto no-scrollbar bg-[#F8FAFC] relative pb-20">
       {/* Header */}
-      <div className="sticky top-0 bg-white z-20 px-4 py-4 flex items-center justify-between shadow-sm">
+      <div className="sticky top-0 bg-white z-30 px-5 py-4 flex items-center justify-between shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)]">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/profile')} className="p-2 hover:bg-gray-50 rounded-full transition-colors">
-            <ArrowLeft size={20} className="text-gray-700" />
+          <button onClick={() => navigate('/dashboard')} className="p-2 -ml-2 hover:bg-gray-50 rounded-full transition-colors active:scale-95">
+            <ArrowLeft size={22} className="text-gray-800" />
           </button>
-          <h1 className="font-bold text-xl text-gray-900">My Listings</h1>
+          <h1 className="font-black text-xl text-gray-900 tracking-tight">Properties</h1>
         </div>
-        <button 
-          onClick={() => navigate('/add')}
-          className="bg-black text-white px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 active:scale-95 transition-transform shadow-lg shadow-black/20"
-        >
-          <Plus size={16} /> Add New
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => navigate('/add-project')}
+            className="bg-[#00AEEF] text-white px-3 py-2 rounded-xl text-[10px] font-black flex items-center gap-1.5 active:scale-95 transition-transform shadow-lg shadow-[#00AEEF]/20"
+          >
+            <Building2 size={14} strokeWidth={3} /> PROJECT
+          </button>
+          <button
+            onClick={() => navigate('/add')}
+            className="bg-[#2FED9A] text-gray-900 px-3 py-2 rounded-xl text-[10px] font-black flex items-center gap-1.5 active:scale-95 transition-transform shadow-lg shadow-[#2FED9A]/20"
+          >
+            <Plus size={14} strokeWidth={3} /> PROPERTY
+          </button>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white px-4 pb-4 pt-1 border-b border-gray-100 sticky top-[72px] z-10 overflow-x-auto no-scrollbar">
+      {/* Scrollable Tabs */}
+      <div className="bg-white px-5 pb-3 pt-3 sticky top-[68px] z-20 overflow-x-auto no-scrollbar shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)]">
         <div className="flex gap-2">
-          {['All', 'Active', 'Pending', 'Rejected', 'Expired'].map((tab) => (
+          {TABS.map((tab) => (
             <button
               key={tab}
-              onClick={() => setFilter(tab as any)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
-                filter === tab 
-                  ? 'bg-primary text-text shadow-md shadow-primary/20' 
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              onClick={() => setActiveTab(tab)}
+              className={`px-5 py-2.5 rounded-full text-xs font-black transition-all whitespace-nowrap active:scale-95 ${
+                activeTab === tab
+                  ? 'bg-[#E11D48] text-white shadow-lg shadow-[#E11D48]/30'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
               {tab}
@@ -196,230 +105,289 @@ export const MyListings: React.FC<Props> = ({ properties = MY_PROPERTIES }) => {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4 pb-24 space-y-4">
-        {filteredListings.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-              <Layers size={40} className="text-gray-300" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">No properties found</h3>
-            <p className="text-gray-500 text-sm mb-6 max-w-[200px]">
-              You haven't posted any properties in this category yet.
-            </p>
-            <Button onClick={() => navigate('/add')}>Add Property Now</Button>
-          </div>
-        ) : (
-          filteredListings.map((property) => (
-            <motion.div
-              key={property.id}
-              layout
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl p-3 shadow-sm border border-gray-100"
-            >
-              {/* Card Header */}
-              <div className="flex gap-3 mb-3">
-                <div className="relative w-24 h-24 flex-shrink-0">
-                  <img 
-                    src={property.images[0]} 
-                    alt={property.title} 
-                    className="w-full h-full object-cover rounded-xl" 
-                  />
-                  <div className={`absolute top-2 left-2 px-3 py-1.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider z-10 ${getStatusColor(property.status)}`}>
-                    {property.status}
+      {/* Content Area */}
+      <div className="pb-6">
+         {activeTab === 'Properties' && (
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} className="p-5">
+               {/* Filters */}
+               <div className="bg-white p-5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 mb-6">
+                  <div className="flex justify-between items-center mb-5">
+                     <h3 className="font-black text-gray-900 text-sm border-b-2 border-[#E11D48] pb-1 inline-block">Search Properties</h3>
+                     <div className="bg-[#F8FAFC] px-3 py-1.5 rounded-lg border border-gray-200">
+                        <span className="text-[10px] font-bold text-gray-600">Listings Left: <span className="text-[#E11D48]">0</span></span>
+                     </div>
                   </div>
-                </div>
-                <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
-                   <div>
-                     <h3 className="font-bold text-gray-900 text-sm truncate mb-0.5">{property.title}</h3>
-                     <p className="text-xs text-gray-500 truncate">{property.address}, {property.city}</p>
-                   </div>
-                   <div>
-                     <p className="text-primary font-bold text-base">${(property.price / 1000).toFixed(1)}k</p>
-                     <p className="text-[10px] text-gray-400">Posted on {new Date(property.createdAt || Date.now()).toLocaleDateString()}</p>
-                   </div>
-                </div>
-                <div className="flex flex-col justify-between items-end">
-                   <button className="p-1.5 text-gray-400 hover:bg-gray-50 rounded-full">
-                     <MoreVertical size={16} />
-                   </button>
-                </div>
-              </div>
+                  <div className="space-y-3 mb-4">
+                     <div className="flex gap-2">
+                       <input type="text" placeholder="Search by ID" className="flex-1 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs text-gray-700 font-medium outline-none focus:ring-2 focus:ring-[#E11D48]/20 focus:bg-white transition-all" />
+                       <button className="bg-[#E11D48] text-white font-black px-6 rounded-xl shadow-md shadow-[#E11D48]/20 active:scale-95 transition-all">GO</button>
+                     </div>
+                     <div className="grid grid-cols-2 gap-2">
+                       <select className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-3 text-xs text-gray-700 font-medium outline-none appearance-none">
+                         <option>Property For</option>
+                       </select>
+                       <select className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-3 text-xs text-gray-700 font-medium outline-none appearance-none">
+                         <option>Property Type</option>
+                       </select>
+                       <input type="text" placeholder="Locality" className="col-span-2 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs text-gray-700 font-medium outline-none focus:ring-2 focus:ring-[#E11D48]/20 focus:bg-white transition-all" />
+                     </div>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                     <button className="text-[10px] font-bold text-gray-400 flex items-center gap-1 hover:text-gray-600 transition-colors"><SlidersHorizontal size={12} /> Reset Search</button>
+                     <button className="bg-[#E11D48] text-white font-black py-2.5 px-6 rounded-xl flex items-center gap-2 shadow-lg shadow-[#E11D48]/30 active:scale-95 transition-all">
+                       <Search size={14} strokeWidth={3} /> Search
+                     </button>
+                  </div>
+               </div>
 
-              {/* Stats Bar */}
-              <div className="flex items-center justify-between bg-card rounded-xl p-3 mb-3 border border-blue-50">
-                <div className="flex items-center gap-1.5">
-                  <Eye size={14} className="text-blue-500" />
-                  <span className="text-xs font-bold text-gray-700">{property.stats?.views || 0}</span>
-                  <span className="text-[10px] text-gray-400">Views</span>
-                </div>
-                <div className="w-px h-4 bg-gray-200"></div>
-                <div className="flex items-center gap-1.5">
-                  <MessageCircle size={14} className="text-primary" />
-                  <span className="text-xs font-bold text-gray-700">{property.stats?.leads || 0}</span>
-                  <span className="text-[10px] text-gray-400">Leads</span>
-                </div>
-                <div className="w-px h-4 bg-gray-200"></div>
-                <div className="flex items-center gap-1.5">
-                  <Heart size={14} className="text-red-400" />
-                  <span className="text-xs font-bold text-gray-700">{property.stats?.saved || 0}</span>
-                  <span className="text-[10px] text-gray-400">Saves</span>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="grid grid-cols-4 gap-2">
-                <button 
-                   onClick={() => navigate(`/property/${property.id}`)}
-                   className="col-span-1 flex flex-col items-center justify-center py-2 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
-                >
-                  <Eye size={16} className="mb-1" />
-                  <span className="text-[10px] font-medium">View</span>
-                </button>
-                <button 
-                   onClick={() => navigate(`/edit/${property.id}`)}
-                   className="col-span-1 flex flex-col items-center justify-center py-2 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
-                >
-                  <Edit2 size={16} className="mb-1" />
-                  <span className="text-[10px] font-medium">Edit</span>
-                </button>
-                <button 
-                   onClick={() => setShowDeleteModal(property.id)}
-                   className="col-span-1 flex flex-col items-center justify-center py-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
-                >
-                  <Trash2 size={16} className="mb-1" />
-                  <span className="text-[10px] font-medium">Delete</span>
-                </button>
-                <button 
-                  onClick={() => handleBoostClick(property.id)}
-                  className="col-span-1 flex flex-col items-center justify-center py-2 rounded-xl bg-primary text-text shadow-md shadow-primary/20 hover:brightness-95 transition-all"
-                >
-                  <Rocket size={16} className="mb-1" />
-                  <span className="text-[10px] font-bold">Boost</span>
-                </button>
-              </div>
-            </motion.div>
-          ))
-        )}
-      </div>
-
-      {/* Delete Confirmation Modal */}
-      <AnimatePresence>
-        {showDeleteModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setShowDeleteModal(null)}
-            />
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-3xl p-6 w-full max-w-xs relative z-10 shadow-2xl"
-            >
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4 mx-auto text-red-500">
-                <AlertCircle size={24} />
-              </div>
-              <h3 className="text-lg font-bold text-center mb-2">Delete Listing?</h3>
-              <p className="text-center text-sm text-gray-500 mb-6">
-                Are you sure you want to delete this property? This action cannot be undone.
-              </p>
-              <div className="flex gap-3">
-                <button 
-                  onClick={() => setShowDeleteModal(null)}
-                  className="flex-1 py-3 bg-gray-100 rounded-xl font-semibold text-sm text-gray-600"
-                >
-                  Cancel
-                </button>
-                <button 
-                  onClick={handleDelete}
-                  className="flex-1 py-3 bg-red-500 rounded-xl font-semibold text-sm text-white shadow-lg shadow-red-200"
-                >
-                  Yes, Delete
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Boost Modal */}
-      <AnimatePresence>
-        {showBoostModal && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-              onClick={() => setShowBoostModal(null)}
-            />
-            <motion.div 
-              initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-              className="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-6 relative z-10 max-h-[90vh] overflow-y-auto"
-            >
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                   <h2 className="text-xl font-bold">Boost Property</h2>
-                   <p className="text-sm text-gray-500">Rank higher & get more leads</p>
-                </div>
-                <button onClick={() => setShowBoostModal(null)} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="space-y-3 mb-6">
-                {BOOST_PLANS.map(plan => (
-                  <div 
-                    key={plan.id}
-                    onClick={() => setSelectedPlan(plan.id)}
-                    className={`relative border-2 rounded-2xl p-4 cursor-pointer transition-all ${
-                      selectedPlan === plan.id 
-                        ? 'border-primary bg-primary/5' 
-                        : 'border-gray-100 hover:border-gray-200'
-                    }`}
-                  >
-                    <div className="flex justify-between items-center mb-2">
-                       <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${plan.color} ${plan.accent}`}>
-                            <plan.icon size={20} />
-                          </div>
-                          <div>
-                            <h3 className="font-bold text-gray-900">{plan.name}</h3>
-                            <p className="text-xs text-gray-500">{plan.duration}</p>
-                          </div>
-                       </div>
-                       <div className="text-right">
-                         <p className="font-bold text-lg">${plan.price}</p>
-                       </div>
-                    </div>
-                    <div className="space-y-1 pl-[52px]">
-                       {plan.benefits.map((b, i) => (
-                         <div key={i} className="flex items-center gap-1.5 text-xs text-gray-600">
-                           <Check size={12} className="text-green-500" /> {b}
+               {/* Property List */}
+               <div className="space-y-4">
+                 {MY_PROPERTIES.map((prop, idx) => (
+                    <motion.div 
+                       key={prop.id}
+                       initial={{ opacity: 0, y: 10 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ delay: idx * 0.1 }}
+                       className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden"
+                    >
+                      {/* Status & Views Banner */}
+                      <div className="flex justify-between items-center bg-gray-50 -mx-4 -mt-4 px-4 py-2.5 mb-4 border-b border-gray-100/50">
+                         <div className="flex items-center gap-1.5">
+                           <Eye size={12} className="text-gray-400" />
+                           <span className="text-[10px] font-extrabold text-gray-600 tracking-wider">VIEWS: {prop.views}</span>
                          </div>
-                       ))}
-                    </div>
-                    {selectedPlan === plan.id && (
-                      <div className="absolute top-4 right-4 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                        <Check size={12} className="text-black" />
+                         <div className={`px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-widest ${getStatusColor(prop.status)}`}>
+                           {prop.status}
+                         </div>
                       </div>
-                    )}
-                  </div>
-                ))}
-              </div>
 
-              <div className="pt-2">
-                 <Button fullWidth onClick={confirmBoost} disabled={isProcessing}>
-                   {isProcessing ? 'Processing Payment...' : `Proceed to Pay $${BOOST_PLANS.find(p => p.id === selectedPlan)?.price}`}
-                 </Button>
-                 <p className="text-center text-[10px] text-gray-400 mt-3">
-                   Secure payment processed via Stripe. By continuing you agree to terms.
-                 </p>
+                      <div className="flex gap-4 mb-4">
+                         {/* Image Box */}
+                         <div className="w-24 h-24 bg-gray-100 rounded-2xl flex flex-col items-center justify-center border border-gray-200 border-dashed relative overflow-hidden flex-shrink-0">
+                           <Building2 size={24} className="text-gray-300 mb-1" />
+                           <span className="text-[8px] font-bold text-gray-400">No Image</span>
+                         </div>
+                         {/* Info */}
+                         <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
+                           <div>
+                             <span className="text-[9px] font-black text-gray-400 tracking-wider">ID: {prop.id}</span>
+                             <h3 className="font-bold text-gray-900 text-xs leading-tight mt-0.5 line-clamp-2">{prop.title}</h3>
+                             <p className="text-[10px] text-gray-500 mt-1 truncate">{prop.address}</p>
+                           </div>
+                           <div className="flex items-center gap-2 mt-2">
+                             <span className="text-xs font-black text-[#E11D48]">{prop.price}</span>
+                             <div className="w-1 h-1 rounded-full bg-gray-300"></div>
+                             <span className="text-[10px] font-bold text-gray-500">{prop.area}</span>
+                           </div>
+                         </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+                         <div className="flex flex-col">
+                           <span className="text-[9px] text-gray-400 font-medium">Posted: {prop.posted}</span>
+                           <span className="text-[9px] text-gray-400 font-medium">Edited: {prop.edited}</span>
+                         </div>
+                         <div className="flex gap-2">
+                           <button className="text-[10px] font-black text-[#00AEEF] px-3 py-2 rounded-xl bg-blue-50 active:scale-95 transition-transform">
+                             View
+                           </button>
+                           <button className="bg-[#E11D48] text-white font-black text-[10px] px-3 py-2 rounded-xl shadow-md shadow-[#E11D48]/20 flex items-center gap-1 active:scale-95 transition-transform">
+                             <ImageIcon size={12} /> Add Image
+                           </button>
+                         </div>
+                      </div>
+                    </motion.div>
+                 ))}
+               </div>
+             </motion.div>
+         )}
+
+         {activeTab === 'Projects' && (
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} className="p-5">
+               {/* Filters */}
+               <div className="bg-white p-5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 mb-6">
+                  <div className="flex justify-between items-center mb-5">
+                     <h3 className="font-black text-gray-900 text-sm border-b-2 border-[#00AEEF] pb-1 inline-block">Search Projects</h3>
+                     <div className="bg-[#F8FAFC] px-3 py-1.5 rounded-lg border border-gray-200">
+                        <span className="text-[10px] font-bold text-gray-600">Listings Left: <span className="text-[#00AEEF]">0</span></span>
+                     </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                     <div className="grid grid-cols-2 gap-2">
+                       <select className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-3 text-xs text-gray-700 font-medium outline-none appearance-none focus:ring-2 focus:ring-[#00AEEF]/20 focus:bg-white transition-all">
+                         <option>Property For</option>
+                       </select>
+                       <select className="bg-gray-50 border border-gray-100 rounded-xl px-3 py-3 text-xs text-gray-700 font-medium outline-none appearance-none focus:ring-2 focus:ring-[#00AEEF]/20 focus:bg-white transition-all">
+                         <option>Property Type</option>
+                       </select>
+                     </div>
+                     <input type="text" placeholder="Enter a Locality or Project" className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs text-gray-700 font-medium outline-none focus:ring-2 focus:ring-[#00AEEF]/20 focus:bg-white transition-all" />
+                     <div className="grid grid-cols-2 gap-2">
+                       <input type="text" placeholder="₹ Min" className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs text-gray-700 font-medium outline-none focus:ring-2 focus:ring-[#00AEEF]/20 focus:bg-white transition-all" />
+                       <input type="text" placeholder="₹ Max" className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs text-gray-700 font-medium outline-none focus:ring-2 focus:ring-[#00AEEF]/20 focus:bg-white transition-all" />
+                     </div>
+                  </div>
+                  <div className="flex justify-between items-center mt-4">
+                     <button className="text-[10px] font-bold text-gray-400 flex items-center gap-1 hover:text-gray-600 transition-colors"><SlidersHorizontal size={12} /> Reset Search</button>
+                     <button className="bg-[#00AEEF] text-white font-black py-2.5 px-6 rounded-xl flex items-center gap-2 shadow-lg shadow-[#00AEEF]/30 active:scale-95 transition-all">
+                       <Search size={14} strokeWidth={3} /> Search
+                     </button>
+                  </div>
+               </div>
+
+               {/* Project List */}
+               <div className="space-y-4">
+                 {MY_PROJECTS.map((proj, idx) => (
+                    <motion.div 
+                       key={proj.id}
+                       initial={{ opacity: 0, y: 10 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       transition={{ delay: idx * 0.1 }}
+                       className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all overflow-hidden"
+                    >
+                      {/* Header: Title, Type Badge, Location */}
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex-1 pr-2">
+                          <h3 className="font-bold text-gray-900 text-sm leading-tight mb-1.5">{proj.title}</h3>
+                          <p className="text-[10px] font-medium text-gray-500 flex items-center gap-1">
+                            <MapPin size={12} className="text-gray-400" /> {proj.address}
+                          </p>
+                        </div>
+                        <div className={`px-2.5 py-1.5 rounded-lg text-[8px] font-black uppercase tracking-widest flex-shrink-0 ${proj.type === 'RESIDENTIAL' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-[#00AEEF]'}`}>
+                          {proj.type}
+                        </div>
+                      </div>
+
+                      {/* Image & Key Stats Block */}
+                      <div className="flex gap-4 mb-4">
+                         {/* Image with status badge inside */}
+                         <div className="w-28 h-28 bg-gray-100 rounded-2xl relative overflow-hidden flex-shrink-0 shadow-inner">
+                            <img src={proj.image} alt={proj.title} className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                            <div className={`absolute top-2 left-2 px-2 py-1 rounded text-[8px] font-black uppercase shadow-sm ${proj.status === 'ACTIVE' ? 'bg-white text-green-600' : 'bg-white text-orange-500'}`}>
+                              {proj.status}
+                            </div>
+                         </div>
+                         
+                         {/* Stats grid */}
+                         <div className="flex-1 min-w-0 grid grid-cols-2 gap-y-3 gap-x-2 py-1">
+                            <div>
+                              <p className="text-[8px] font-black text-gray-400 tracking-wider mb-0.5 uppercase">Project ID</p>
+                              <p className="text-[10px] font-bold text-gray-900 truncate">{proj.id}</p>
+                            </div>
+                            <div>
+                              <p className="text-[8px] font-black text-gray-400 tracking-wider mb-0.5 uppercase">Listed On</p>
+                              <p className="text-[10px] font-bold text-gray-900 truncate">{proj.listedOn}</p>
+                            </div>
+                            <div className="col-span-2">
+                              <p className="text-[8px] font-black text-gray-400 tracking-wider mb-0.5 uppercase">Price Range</p>
+                              <p className="text-xs font-black text-green-600 truncate">{proj.price}</p>
+                            </div>
+                            <div className="col-span-2 border-t border-gray-50 pt-2">
+                              <p className="text-[8px] font-black text-gray-400 tracking-wider mb-0.5 uppercase">Analytics</p>
+                              <p className="text-[10px] font-bold text-gray-900 flex items-center gap-1.5">
+                                <Eye size={12} className="text-[#00AEEF]"/> 
+                                <span className="text-green-600 font-black">+{proj.views}</span> Views
+                              </p>
+                            </div>
+                         </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+                         <div className="flex gap-2">
+                           <button className="flex items-center gap-1.5 text-[10px] font-black text-gray-700 px-3.5 py-2 rounded-xl bg-gray-50 hover:bg-gray-100 active:scale-95 transition-all">
+                             <Edit2 size={12} /> Edit Project
+                           </button>
+                           <button className="flex items-center justify-center w-8 h-8 rounded-xl bg-red-50 text-[#E11D48] hover:bg-red-100 active:scale-95 transition-all">
+                             <Trash2 size={14} />
+                           </button>
+                         </div>
+                         <button className="text-[10px] font-black text-gray-900 flex items-center gap-1 hover:text-[#00AEEF] transition-colors pr-1">
+                           View Full Details <ChevronRight size={14} className="text-gray-400" />
+                         </button>
+                      </div>
+                    </motion.div>
+                 ))}
+               </div>
+            </motion.div>
+         )}
+
+         {activeTab === 'Bulk Edit' && (
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} className="p-5 pb-32">
+               <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-black text-gray-900 text-sm">Bulk Edit Pricing</h3>
+                  <button onClick={selectAll} className="text-xs font-bold text-[#E11D48] hover:underline">
+                    {selectedProps.length === MY_PROPERTIES.length ? 'Deselect All' : 'Select All'}
+                  </button>
+               </div>
+               
+               <div className="space-y-3">
+                 {MY_PROPERTIES.map((prop, idx) => {
+                   const isSelected = selectedProps.includes(prop.id);
+                   return (
+                     <div key={prop.id} onClick={() => toggleSelect(prop.id)} className={`bg-white p-4 rounded-3xl border-2 transition-all cursor-pointer ${isSelected ? 'border-[#E11D48] shadow-md shadow-[#E11D48]/10' : 'border-gray-100 shadow-sm'}`}>
+                       <div className="flex items-start gap-3">
+                          <button className="mt-1 flex-shrink-0">
+                            {isSelected ? <CheckSquare size={20} className="text-[#E11D48]" /> : <Square size={20} className="text-gray-300" />}
+                          </button>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-[10px] font-black text-gray-400 tracking-wider">ID: {prop.id}</span>
+                              <div className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${getStatusColor(prop.status)}`}>{prop.status}</div>
+                            </div>
+                            <h4 className="font-bold text-gray-900 text-xs line-clamp-1 mb-2">{prop.title}</h4>
+                            
+                            <div className="flex items-center gap-3 bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                               <div className="flex-1">
+                                 <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Current Price</p>
+                                 <p className="text-xs font-black text-gray-700">{prop.price}</p>
+                               </div>
+                               <div className="w-px h-6 bg-gray-200"></div>
+                               <div className="flex-2 relative" onClick={(e) => e.stopPropagation()}>
+                                 <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Set New Price</p>
+                                 <div className="relative">
+                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">₹</span>
+                                    <input type="text" placeholder="Amount" className="w-24 bg-white border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-xs font-bold text-gray-900 outline-none focus:border-[#E11D48] shadow-sm" />
+                                 </div>
+                               </div>
+                            </div>
+                          </div>
+                       </div>
+                     </div>
+                   )
+                 })}
+               </div>
+
+               {/* Sticky Action Bar */}
+               <div className="fixed bottom-0 left-0 right-0 p-5 bg-white border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] z-30">
+                  <div className="flex gap-2">
+                     <button className="flex-1 bg-green-500 text-white font-black text-[10px] py-3.5 rounded-xl shadow-lg shadow-green-500/30 active:scale-95 transition-all">
+                       ACTIVATE
+                     </button>
+                     <button className="flex-1 bg-gray-800 text-white font-black text-[10px] py-3.5 rounded-xl shadow-lg shadow-gray-800/30 active:scale-95 transition-all">
+                       DEACTIVATE
+                     </button>
+                     <button className="flex-1 bg-[#E11D48] text-white font-black text-[10px] py-3.5 rounded-xl shadow-lg shadow-[#E11D48]/30 active:scale-95 transition-all">
+                       SUBMIT
+                     </button>
+                  </div>
+               </div>
+            </motion.div>
+         )}
+
+         {activeTab === 'Favorites' && (
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} className="p-5">
+              <div className="bg-white p-10 rounded-3xl border border-gray-100 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] mt-4">
+                 <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-100">
+                   <Heart size={32} className="text-[#E11D48]" />
+                 </div>
+                 <h4 className="font-black text-gray-900 text-base mb-1.5 tracking-tight">No Record Found</h4>
+                 <p className="text-xs text-gray-500 max-w-[200px] mx-auto leading-relaxed font-medium">You haven't added any properties to your favorites list yet.</p>
               </div>
             </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+         )}
+      </div>
     </div>
   );
 };
