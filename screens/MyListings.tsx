@@ -314,54 +314,56 @@ export const MyListings: React.FC = () => {
          )}
 
          {activeTab === 'Bulk Edit' && (
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} className="p-5 pb-32">
-               <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-black text-gray-900 text-sm">Bulk Edit Pricing</h3>
-                  <button onClick={selectAll} className="text-xs font-bold text-[#E11D48] hover:underline">
-                    {selectedProps.length === MY_PROPERTIES.length ? 'Deselect All' : 'Select All'}
-                  </button>
-               </div>
-               
-               <div className="space-y-3">
-                 {MY_PROPERTIES.map((prop, idx) => {
-                   const isSelected = selectedProps.includes(prop.id);
-                   return (
-                     <div key={prop.id} onClick={() => toggleSelect(prop.id)} className={`bg-white p-4 rounded-3xl border-2 transition-all cursor-pointer ${isSelected ? 'border-[#E11D48] shadow-md shadow-[#E11D48]/10' : 'border-gray-100 shadow-sm'}`}>
-                       <div className="flex items-start gap-3">
-                          <button className="mt-1 flex-shrink-0">
-                            {isSelected ? <CheckSquare size={20} className="text-[#E11D48]" /> : <Square size={20} className="text-gray-300" />}
-                          </button>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="text-[10px] font-black text-gray-400 tracking-wider">ID: {prop.id}</span>
-                              <div className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${getStatusColor(prop.status)}`}>{prop.status}</div>
-                            </div>
-                            <h4 className="font-bold text-gray-900 text-xs line-clamp-1 mb-2">{prop.title}</h4>
-                            
-                            <div className="flex items-center gap-3 bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                               <div className="flex-1">
-                                 <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Current Price</p>
-                                 <p className="text-xs font-black text-gray-700">{prop.price}</p>
+            <motion.div initial={{opacity:0}} animate={{opacity:1}} className="flex flex-col min-h-[calc(100vh-140px)]">
+               <div className="p-5 flex-1">
+                  <div className="flex justify-between items-center mb-4">
+                     <h3 className="font-black text-gray-900 text-sm">Bulk Edit Pricing</h3>
+                     <button onClick={selectAll} className="text-xs font-bold text-[#E11D48] hover:underline">
+                       {selectedProps.length === MY_PROPERTIES.length ? 'Deselect All' : 'Select All'}
+                     </button>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {MY_PROPERTIES.map((prop, idx) => {
+                      const isSelected = selectedProps.includes(prop.id);
+                      return (
+                        <div key={prop.id} onClick={() => toggleSelect(prop.id)} className={`bg-white p-4 rounded-3xl border-2 transition-all cursor-pointer ${isSelected ? 'border-[#E11D48] shadow-md shadow-[#E11D48]/10' : 'border-gray-100 shadow-sm'}`}>
+                          <div className="flex items-start gap-3">
+                             <button className="mt-1 flex-shrink-0">
+                               {isSelected ? <CheckSquare size={20} className="text-[#E11D48]" /> : <Square size={20} className="text-gray-300" />}
+                             </button>
+                             <div className="flex-1 min-w-0">
+                               <div className="flex justify-between items-center mb-1">
+                                 <span className="text-[10px] font-black text-gray-400 tracking-wider">ID: {prop.id}</span>
+                                 <div className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${getStatusColor(prop.status)}`}>{prop.status}</div>
                                </div>
-                               <div className="w-px h-6 bg-gray-200"></div>
-                               <div className="flex-2 relative" onClick={(e) => e.stopPropagation()}>
-                                 <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Set New Price</p>
-                                 <div className="relative">
-                                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">₹</span>
-                                    <input type="text" placeholder="Amount" className="w-24 bg-white border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-xs font-bold text-gray-900 outline-none focus:border-[#E11D48] shadow-sm" />
-                                 </div>
+                               <h4 className="font-bold text-gray-900 text-xs line-clamp-1 mb-2">{prop.title}</h4>
+                               
+                               <div className="flex items-center gap-3 bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                                  <div className="flex-1">
+                                    <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Current Price</p>
+                                    <p className="text-xs font-black text-gray-700">{prop.price}</p>
+                                  </div>
+                                  <div className="w-px h-6 bg-gray-200"></div>
+                                  <div className="flex-2 relative" onClick={(e) => e.stopPropagation()}>
+                                    <p className="text-[9px] text-gray-400 font-bold uppercase mb-0.5">Set New Price</p>
+                                    <div className="relative">
+                                       <span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">₹</span>
+                                       <input type="text" placeholder="Amount" className="w-24 bg-white border border-gray-200 rounded-lg py-1.5 pl-6 pr-2 text-xs font-bold text-gray-900 outline-none focus:border-[#E11D48] shadow-sm" />
+                                    </div>
+                                  </div>
                                </div>
-                            </div>
+                             </div>
                           </div>
-                       </div>
-                     </div>
-                   )
-                 })}
+                        </div>
+                      )
+                    })}
+                  </div>
                </div>
 
-               {/* Sticky Action Bar */}
-               <div className="fixed bottom-0 left-0 right-0 p-5 bg-white border-t border-gray-100 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] z-30">
-                  <div className="flex gap-2">
+               {/* Sticky Action Bar inside the flex column */}
+               <div className="sticky bottom-0 w-full p-5 bg-white border-t border-gray-100 shadow-[0_-15px_30px_rgba(0,0,0,0.08)] z-30 mt-auto">
+                  <div className="flex gap-2 max-w-full">
                      <button className="flex-1 bg-green-500 text-white font-black text-[10px] py-3.5 rounded-xl shadow-lg shadow-green-500/30 active:scale-95 transition-all">
                        ACTIVATE
                      </button>

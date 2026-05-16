@@ -44,7 +44,7 @@ export const CalculatorsScreen: React.FC = () => {
   const [futureResult, setFutureResult] = useState<number | null>(null);
 
   // --- HELPERS ---
-  const formatCurrency = (val: number) => 
+  const formatCurrency = (val: number) =>
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
 
   const calculatePMT = (rate: number, nper: number, pv: number) => {
@@ -70,7 +70,7 @@ export const CalculatorsScreen: React.FC = () => {
 
     // Logic: Assuming 50% of net income can go towards EMIs (FOIR)
     const disposableIncome = income - obligations;
-    const maxEmiCapacity = disposableIncome * 0.50; 
+    const maxEmiCapacity = disposableIncome * 0.50;
 
     if (maxEmiCapacity <= 0) {
       setEligibilityResult({ eligible: false, maxLoan: 0, emi: 0 });
@@ -91,7 +91,7 @@ export const CalculatorsScreen: React.FC = () => {
     const P = parseFloat(emiForm.amount) || 0;
     const R = parseFloat(emiForm.rate) || 0;
     const N = parseFloat(emiForm.tenure) || 0;
-    
+
     if (P > 0 && R > 0 && N > 0) {
       const emi = calculatePMT(R, N, P);
       setEmiResult(emi);
@@ -113,7 +113,7 @@ export const CalculatorsScreen: React.FC = () => {
     const r = parseFloat(futureForm.appreciation) || 0;
     const n = parseFloat(futureForm.years) || 0;
     // FV = PV * (1 + r/100)^n
-    const fv = pv * Math.pow((1 + r/100), n);
+    const fv = pv * Math.pow((1 + r / 100), n);
     setFutureResult(fv);
   };
 
@@ -154,11 +154,10 @@ export const CalculatorsScreen: React.FC = () => {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as TabType)}
-            className={`flex-1 min-w-[120px] py-4 text-xs font-bold uppercase tracking-wide border-b-2 transition-colors ${
-              activeTab === tab.id 
-                ? 'border-[#D90429] text-[#D90429] bg-white' 
+            className={`flex-1 min-w-[120px] py-4 text-xs font-bold uppercase tracking-wide border-b-2 transition-colors ${activeTab === tab.id
+                ? 'border-[#D90429] text-[#D90429] bg-white'
                 : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+              }`}
           >
             {tab.label}
           </button>
@@ -166,40 +165,40 @@ export const CalculatorsScreen: React.FC = () => {
       </div>
 
       <div className="flex-1 p-5 pb-24">
-        
+
         {/* --- LOAN ELIGIBILITY CONTENT --- */}
         {activeTab === 'eligibility' && (
           <div className="space-y-6 animate-fade-in">
             <div className="space-y-4">
-              <Input 
-                label="Loan Required (₹)" 
-                type="number" 
+              <Input
+                label="Loan Required (₹)"
+                type="number"
                 value={eligibilityForm.loanAmount}
-                onChange={(e) => setEligibilityForm({...eligibilityForm, loanAmount: e.target.value})}
+                onChange={(e) => setEligibilityForm({ ...eligibilityForm, loanAmount: e.target.value })}
               />
-              <Input 
-                label="Net income per month (₹)" 
-                type="number" 
+              <Input
+                label="Net income per month (₹)"
+                type="number"
                 value={eligibilityForm.netIncome}
-                onChange={(e) => setEligibilityForm({...eligibilityForm, netIncome: e.target.value})}
+                onChange={(e) => setEligibilityForm({ ...eligibilityForm, netIncome: e.target.value })}
               />
-              <Input 
-                label="Existing loan commitments (₹)" 
-                type="number" 
+              <Input
+                label="Existing loan commitments (₹)"
+                type="number"
                 value={eligibilityForm.existingEmi}
-                onChange={(e) => setEligibilityForm({...eligibilityForm, existingEmi: e.target.value})}
+                onChange={(e) => setEligibilityForm({ ...eligibilityForm, existingEmi: e.target.value })}
               />
-              <Input 
-                label="Loan Tenure (years)" 
-                type="number" 
+              <Input
+                label="Loan Tenure (years)"
+                type="number"
                 value={eligibilityForm.tenure}
-                onChange={(e) => setEligibilityForm({...eligibilityForm, tenure: e.target.value})}
+                onChange={(e) => setEligibilityForm({ ...eligibilityForm, tenure: e.target.value })}
               />
-              <Input 
-                label="Rate of Interest (%)" 
-                type="number" 
+              <Input
+                label="Rate of Interest (%)"
+                type="number"
                 value={eligibilityForm.rate}
-                onChange={(e) => setEligibilityForm({...eligibilityForm, rate: e.target.value})}
+                onChange={(e) => setEligibilityForm({ ...eligibilityForm, rate: e.target.value })}
               />
             </div>
 
@@ -242,23 +241,23 @@ export const CalculatorsScreen: React.FC = () => {
         {activeTab === 'emi' && (
           <div className="space-y-6 animate-fade-in">
             <div className="space-y-4">
-              <Input 
-                label="Loan Amount (₹)" 
-                type="number" 
+              <Input
+                label="Loan Amount (₹)"
+                type="number"
                 value={emiForm.amount}
-                onChange={(e) => setEmiForm({...emiForm, amount: e.target.value})}
+                onChange={(e) => setEmiForm({ ...emiForm, amount: e.target.value })}
               />
-              <Input 
-                label="Loan Tenure (years)" 
-                type="number" 
+              <Input
+                label="Loan Tenure (years)"
+                type="number"
                 value={emiForm.tenure}
-                onChange={(e) => setEmiForm({...emiForm, tenure: e.target.value})}
+                onChange={(e) => setEmiForm({ ...emiForm, tenure: e.target.value })}
               />
-              <Input 
-                label="Rate of Interest (%)" 
-                type="number" 
+              <Input
+                label="Rate of Interest (%)"
+                type="number"
                 value={emiForm.rate}
-                onChange={(e) => setEmiForm({...emiForm, rate: e.target.value})}
+                onChange={(e) => setEmiForm({ ...emiForm, rate: e.target.value })}
               />
             </div>
 
@@ -271,9 +270,9 @@ export const CalculatorsScreen: React.FC = () => {
               <div className="mt-8 flex flex-col items-end">
                 <p className="text-lg text-gray-600 mb-1">Monthly EMI</p>
                 <h3 className="text-3xl font-bold text-gray-900">{formatCurrency(emiResult)}</h3>
-                
+
                 <div className="mt-6 w-full flex justify-end">
-                   <Button variant="outline" className="border-red-200 text-[#D90429] h-10 px-6 text-sm" onClick={() => navigate('/home-loan')}>Apply for Loan</Button>
+                  <Button variant="outline" className="border-red-200 text-[#D90429] h-10 px-6 text-sm" onClick={() => navigate('/home-loan')}>Apply for Loan</Button>
                 </div>
               </div>
             )}
@@ -284,24 +283,24 @@ export const CalculatorsScreen: React.FC = () => {
         {activeTab === 'rental' && (
           <div className="space-y-6 animate-fade-in">
             <div className="space-y-4">
-              <Input 
-                label="Property Value (₹)" 
-                type="number" 
+              <Input
+                label="Property Value (₹)"
+                type="number"
                 value={rentalForm.value}
-                onChange={(e) => setRentalForm({...rentalForm, value: e.target.value})}
+                onChange={(e) => setRentalForm({ ...rentalForm, value: e.target.value })}
               />
-              <Input 
-                label="Year (per month)" 
-                type="number" 
+              <Input
+                label="Year (per month)"
+                type="number"
                 value="12"
                 readOnly
                 className="bg-gray-100"
               />
-              <Input 
-                label="Rate of Rent (%)" 
-                type="number" 
+              <Input
+                label="Rate of Rent (%)"
+                type="number"
                 value={rentalForm.yieldRate}
-                onChange={(e) => setRentalForm({...rentalForm, yieldRate: e.target.value})}
+                onChange={(e) => setRentalForm({ ...rentalForm, yieldRate: e.target.value })}
               />
             </div>
 
@@ -323,23 +322,23 @@ export const CalculatorsScreen: React.FC = () => {
         {activeTab === 'future' && (
           <div className="space-y-6 animate-fade-in">
             <div className="space-y-4">
-              <Input 
-                label="Current property value (₹)" 
-                type="number" 
+              <Input
+                label="Current property value (₹)"
+                type="number"
                 value={futureForm.currentValue}
-                onChange={(e) => setFutureForm({...futureForm, currentValue: e.target.value})}
+                onChange={(e) => setFutureForm({ ...futureForm, currentValue: e.target.value })}
               />
-              <Input 
-                label="No. of year" 
-                type="number" 
+              <Input
+                label="No. of year"
+                type="number"
                 value={futureForm.years}
-                onChange={(e) => setFutureForm({...futureForm, years: e.target.value})}
+                onChange={(e) => setFutureForm({ ...futureForm, years: e.target.value })}
               />
-              <Input 
-                label="Average appreciation (%)" 
-                type="number" 
+              <Input
+                label="Average appreciation (%)"
+                type="number"
                 value={futureForm.appreciation}
-                onChange={(e) => setFutureForm({...futureForm, appreciation: e.target.value})}
+                onChange={(e) => setFutureForm({ ...futureForm, appreciation: e.target.value })}
               />
             </div>
 

@@ -19,9 +19,10 @@ export const DashboardScreen = () => {
   ];
 
   const dashboardModules = [
-    { id: 1, title: 'Contacts/Responses', desc: 'Viewed Leads', icon: UserCheck, color: 'bg-red-50 text-red-500', path: '/contacts' },
+    { id: 1, title: 'Contacts/Response', desc: 'Viewed Leads', icon: UserCheck, color: 'bg-red-50 text-red-500', path: '/contacts' },
     { id: 2, title: 'Properties', desc: 'Manage Properties', icon: Building2, color: 'bg-green-50 text-green-500', path: '/my-listings' },
-    { id: 3, title: 'Bookings', desc: 'View Clients', icon: CalendarCheck, color: 'bg-purple-50 text-purple-500', path: '/orders' },
+    { id: 3, title: 'Bookings', desc: 'View Clients', icon: CalendarCheck, color: 'bg-purple-50 text-purple-500', path: '/bookings' },
+    { id: 4, title: 'Subscriptions', desc: 'Manage Plans', icon: Crown, color: 'bg-yellow-50 text-yellow-600', path: '/my-subscription' },
   ];
 
   const responses = [
