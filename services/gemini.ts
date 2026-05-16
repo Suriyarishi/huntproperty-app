@@ -1,7 +1,17 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Use Vite's environment variables or fallback to process.env (handled by vite define)
+const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? process.env.API_KEY : undefined);
+
+let ai: any = null;
+try {
+  if (apiKey) {
+    ai = new GoogleGenAI({ apiKey });
+  }
+} catch (e) {
+  console.error("Failed to initialize GoogleGenAI:", e);
+}
 
 // Generate a property description based on features
 export const generatePropertyDescription = async (
@@ -11,13 +21,15 @@ export const generatePropertyDescription = async (
   features: string[],
   area: number
 ): Promise<string> => {
+  if (!ai) return "AI service not configured.";
+  
   try {
     const prompt = `Write a compelling, professional real estate description for a ${bhk} BHK ${type} named "${title}". 
     It is ${area} sqft. Key features: ${features.join(', ')}. 
     Keep it under 150 words, engaging, and sales-focused. Use HTML line breaks <br/> if needed for formatting.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       contents: prompt,
     });
 
@@ -28,14 +40,17 @@ export const generatePropertyDescription = async (
   }
 };
 
+
 // Use Search Grounding to get neighborhood insights
 export const getNeighborhoodInsights = async (address: string, city: string): Promise<{ text: string; sources: { uri: string; title: string }[] }> => {
   try {
     const prompt = `What are the key livability factors for the neighborhood around ${address}, ${city}? 
     Include nearby schools, hospitals, connectivity, and recent market trends. Keep it concise and helpful for a home buyer.`;
 
+    if (!ai) return { text: "AI service not configured.", sources: [] };
+
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       contents: prompt,
       config: {
         tools: [{ googleSearch: {} }],
@@ -64,8 +79,10 @@ export const generateSmartReply = async (history: string[]): Promise<string[]> =
     Suggest 3 short, polite, and relevant quick replies (max 8 words each) that the buyer could send next.
     Return ONLY the 3 phrases separated by a pipe symbol (|).`;
 
+    if (!ai) return [];
+
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       contents: prompt,
     });
 

@@ -19,10 +19,16 @@ export const DashboardScreen = () => {
   ];
 
   const dashboardModules = [
-    { id: 1, title: 'Contacts/Response', desc: 'Viewed Leads', icon: UserCheck, color: 'bg-red-50 text-red-500', path: '/contacts' },
+    { id: 1, title: 'Contacts/Responses', desc: 'Viewed Leads', icon: UserCheck, color: 'bg-red-50 text-red-500', path: '/contacts' },
     { id: 2, title: 'Properties', desc: 'Manage Properties', icon: Building2, color: 'bg-green-50 text-green-500', path: '/my-listings' },
-    { id: 3, title: 'Bookings', desc: 'View Clients', icon: CalendarCheck, color: 'bg-purple-50 text-purple-500', path: '/bookings' },
-    { id: 4, title: 'Subscriptions', desc: 'Manage Plans', icon: Crown, color: 'bg-yellow-50 text-yellow-600', path: '/my-subscription' },
+    { id: 3, title: 'Bookings', desc: 'View Clients', icon: CalendarCheck, color: 'bg-purple-50 text-purple-500', path: '/orders' },
+    { id: 4, title: 'Subscriptions', desc: '3 Active Services', icon: Crown, color: 'bg-yellow-50 text-yellow-600', path: '/my-subscription' },
+  ];
+
+  const subscribedServices = [
+    { id: 1, title: 'Agent-LEOPARD', desc: 'Expired: 23 Apr 2018', icon: Zap, color: 'bg-orange-50 text-orange-500' },
+    { id: 2, title: 'Agent-Platinum', desc: 'Expired: 29 Sep 2018', icon: ShieldCheck, color: 'bg-blue-50 text-blue-500' },
+    { id: 3, title: 'Agent-Silver', desc: 'Expired: 21 Nov 2018', icon: Star, color: 'bg-gray-50 text-gray-400' },
   ];
 
   const responses = [
@@ -163,37 +169,23 @@ export const DashboardScreen = () => {
 
         {/* Subscription Section */}
         <div>
-          <h2 className="font-bold text-lg text-gray-900 mb-3 px-1">Your Subscription</h2>
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 text-white relative overflow-hidden shadow-lg">
-             {/* Pattern */}
-             <div className="absolute top-0 right-0 p-8 opacity-10">
-                <Crown size={120} />
-             </div>
-             
-             <div className="relative z-10">
-                <div className="flex justify-between items-start mb-4">
-                   <div>
-                     <div className="flex items-center gap-2 mb-1">
-                        <Crown size={20} className="text-yellow-400" />
-                        <span className="font-bold text-lg tracking-wide">GOLD PLAN</span>
-                     </div>
-                     <Badge color="bg-yellow-400/20 text-yellow-300 border border-yellow-400/30">Active</Badge>
-                   </div>
-                   <div className="text-right">
-                      <p className="text-xs text-gray-400">Renew by</p>
-                      <p className="font-bold text-sm">Oct 24, 2025</p>
-                   </div>
-                </div>
-                
-                <div className="space-y-2 mb-5">
-                   <div className="flex items-center gap-2 text-xs text-gray-300">
-                     <CheckCircle size={14} className="text-primary" /> 50 Featured Listings
-                   </div>
-                   <div className="flex items-center gap-2 text-xs text-gray-300">
-                     <CheckCircle size={14} className="text-primary" /> Priority Support
-                   </div>
-                </div>
-             </div>
+          <div className="flex items-center justify-between mb-3 px-1">
+            <h2 className="font-bold text-lg text-gray-900">Your Subscriptions</h2>
+            <button onClick={() => navigate('/my-subscription')} className="text-xs font-bold text-primary">Manage</button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 -mx-5 px-5">
+             {subscribedServices.map(s => (
+               <div 
+                 key={s.id} 
+                 className="min-w-[150px] bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col items-start group"
+               >
+                  <div className={`p-3 rounded-2xl ${s.color} mb-4 group-hover:scale-110 transition-transform`}>
+                    <s.icon size={22} />
+                  </div>
+                  <h3 className="font-black text-[12px] text-gray-900 leading-tight uppercase tracking-tight">{s.title}</h3>
+                  <p className="text-[9px] text-gray-400 mt-1 font-bold">{s.desc}</p>
+               </div>
+             ))}
           </div>
         </div>
 

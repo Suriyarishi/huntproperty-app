@@ -1,4 +1,5 @@
 
+// Main App Component
 import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,7 +19,6 @@ import { SearchScreen } from './screens/Search';
 import { SplashScreen } from './screens/Splash';
 import { AuthScreen } from './screens/Auth';
 import { DashboardScreen } from './screens/Dashboard';
-import { DeveloperDashboardScreen } from './screens/DeveloperDashboard';
 import { InsightsScreen } from './screens/Insights';
 import { HomeLoanScreen } from './screens/HomeLoan';
 import { AdvertiseScreen } from './screens/Advertise';
@@ -35,7 +35,6 @@ import { BuilderProjectsScreen } from './screens/BuilderProjects';
 import { CompareProjectsScreen } from './screens/CompareProjects';
 import { UnitDetailsScreen } from './screens/UnitDetails';
 import { ContactsResponsesScreen } from './screens/ContactsResponses';
-import { BookingsScreen } from './screens/Bookings';
 import { Input, Badge, SectionHeader, Button } from './components/UI';
 import { Drawer } from './components/Drawer';
 import { Property, ChatSession, ChatMessage } from './types';
@@ -534,7 +533,7 @@ const HomeScreen: React.FC<{ unreadCount: number, onOpenDrawer: () => void }> = 
             {NEWS_ITEMS.slice(0, 2).map((news, i) => (
               <div key={news.id} className="w-64 shrink-0 bg-[#F5F9FF] rounded-2xl overflow-hidden border border-blue-50 shadow-sm">
                 <div className="h-32 relative">
-                  <img src="file:///C:/Users/suriy/.gemini/antigravity/brain/b70f208c-1d96-4e0e-ad53-9a39a16b2c25/real_estate_news_banner_1_1772186540127.png" className="w-full h-full object-cover" />
+                  <img src={news.image} className="w-full h-full object-cover" />
                   <div className="absolute bottom-2 left-2">
                     <span className="bg-[#2FED9A] text-white text-[8px] font-black px-2 py-1 rounded tracking-widest uppercase">News</span>
                   </div>
@@ -601,7 +600,7 @@ const SavedScreen = ({ shortlisted }: { shortlisted: string[] }) => (
 );
 
 // Wrapper manages global state and routing
-const Wrapper = ({ onLogout, userRole }: { onLogout: () => void, userRole: string }) => {
+const Wrapper = ({ onLogout }: { onLogout: () => void }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [shortlisted, setShortlisted] = useState<string[]>([]);
   const [chats, setChats] = useState<ChatSession[]>([
@@ -679,8 +678,8 @@ const Wrapper = ({ onLogout, userRole }: { onLogout: () => void, userRole: strin
         <Route path="/" element={<><HomeScreen onOpenDrawer={() => setIsDrawerOpen(true)} unreadCount={chats.reduce((acc, c) => acc + (c.messages[c.messages.length - 1]?.sender === 'other' && !c.messages[c.messages.length - 1]?.isRead ? 1 : 0), 0)} /><BottomNav /></>} />
         <Route path="/search" element={<><SearchScreen properties={MOCK_PROPERTIES} /><BottomNav /></>} />
         <Route path="/saved" element={<><SavedScreen shortlisted={shortlisted} /><BottomNav /></>} />
-        <Route path="/profile" element={userRole === 'agent' ? <><DashboardScreen /><BottomNav /></> : <><DeveloperDashboardScreen /><BottomNav /></>} />
-        <Route path="/dashboard" element={userRole === 'agent' ? <><DashboardScreen /><BottomNav /></> : <><DeveloperDashboardScreen /><BottomNav /></>} />
+        <Route path="/profile" element={<><DashboardScreen /><BottomNav /></>} />
+        <Route path="/dashboard" element={<><DashboardScreen /><BottomNav /></>} />
         <Route path="/property/:id" element={<PropertyDetails properties={MOCK_PROPERTIES} toggleShortlist={toggleShortlist} shortlisted={shortlisted} onStartChat={startChat} />} />
         <Route path="/add" element={<AddProperty properties={USER_PROPERTIES} />} />
         <Route path="/add-project" element={<AddProject />} />
@@ -688,7 +687,6 @@ const Wrapper = ({ onLogout, userRole }: { onLogout: () => void, userRole: strin
         <Route path="/chats" element={<ChatListScreen chats={chats} />} />
         <Route path="/chat/:id" element={<ChatDetailScreen chats={chats} onSendMessage={sendMessage} />} />
         <Route path="/contacts" element={<ContactsResponsesScreen />} />
-        <Route path="/bookings" element={<BookingsScreen />} />
         <Route path="/my-listings" element={<MyListings properties={USER_PROPERTIES} />} />
         <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/edit-profile" element={<EditProfileScreen />} />
@@ -717,16 +715,14 @@ const Wrapper = ({ onLogout, userRole }: { onLogout: () => void, userRole: strin
 }
 
 export default function App() {
-  const [showSplash, setShowSplash] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState<'agent' | 'dev'>('agent');
+  const [showSplash, setShowSplash] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   const handleSplashFinish = () => {
     setShowSplash(false);
   };
 
-  const handleLogin = (role: 'agent' | 'dev') => {
-    setUserRole(role);
+  const handleLogin = () => {
     setIsAuthenticated(true);
   };
 
@@ -768,7 +764,7 @@ export default function App() {
                 transition={{ duration: 0.5 }}
                 className="h-full w-full"
               >
-                <Wrapper onLogout={handleLogout} userRole={userRole} />
+                <Wrapper onLogout={handleLogout} />
               </motion.div>
             )}
           </AnimatePresence>

@@ -38,8 +38,8 @@ export const PropertyDetails: React.FC<Props> = ({ properties, toggleShortlist, 
   if (!property) return <div className="p-8 text-center font-medium text-gray-500">Property not found</div>;
 
   // Use the generated assets
-  const heroImage = "/C:/Users/suriy/.gemini/antigravity/brain/b70f208c-1d96-4e0e-ad53-9a39a16b2c25/modern_apartment_hero_1772182509336.png";
-  const mapImage = "/C:/Users/suriy/.gemini/antigravity/brain/b70f208c-1d96-4e0e-ad53-9a39a16b2c25/hyderabad_map_preview_1772182539997.png";
+  const heroImage = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1200&auto=format&fit=crop";
+  const mapImage = "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=800&auto=format&fit=crop";
 
   const amenities = [
     { icon: <School className="text-red-500" />, label: 'School', bg: 'bg-red-50' },

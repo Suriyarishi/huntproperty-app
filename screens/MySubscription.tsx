@@ -1,188 +1,134 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { 
   ArrowLeft, Crown, CheckCircle, Zap, Calendar, 
-  AlertCircle, Receipt, History, Layout, Bell, 
-  ChevronRight, ExternalLink, ShieldCheck, Clock
+  AlertCircle, FileText, Layout, Bell, ShieldCheck, 
+  History, Eye, Clock, CreditCard 
 } from 'lucide-react';
 import { Button, Badge } from '../components/UI';
-import { motion, AnimatePresence } from 'framer-motion';
 
-type TabType = 'subscribed' | 'history' | 'services' | 'alerts';
+const TABS = ['Subscribed Services', 'Order History', 'View Services', 'Alerts'];
+
+const SERVICES = [
+  { id: '307003737520', title: 'Agent-LEOPARD-2500-2500', status: 'Success', time: '23 Apr 2018', valid: '23 Apr 2018 ( Expired )', mode: 'Credit Card' },
+  { id: '307003754474', title: 'Agent-Platinum-9500', status: 'Success', time: '02 May 2018', valid: '29 Sep 2018 ( Expired )', mode: 'Net Banking' },
+  { id: '107422308340', title: 'Agent-Silver-10', status: 'Success', time: '23 Aug 2018', valid: '21 Nov 2018 ( Expired )', mode: 'Debit Card' },
+];
 
 export const MySubscriptionScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<TabType>('subscribed');
-
-  const tabs = [
-    { id: 'subscribed', label: 'Subscribed Services', icon: ShieldCheck },
-    { id: 'history', label: 'Order History', icon: History },
-    { id: 'services', label: 'View Services', icon: Layout },
-    { id: 'alerts', label: 'Alerts', icon: Bell },
-  ];
-
-  const subscriptions = [
-    {
-      orderId: '307003737520',
-      paymentMode: 'Online',
-      title: 'Agent-LEOPARD-2500-2500',
-      status: 'Success',
-      time: '23 Apr 2018',
-      validTill: '23 Apr 2018',
-      isExpired: true
-    },
-    {
-      orderId: '307003754474',
-      paymentMode: 'Online',
-      title: 'Agent-Platinum-9500',
-      status: 'Success',
-      time: '02 May 2018',
-      validTill: '29 Sep 2018',
-      isExpired: true
-    },
-    {
-      orderId: '107422308340',
-      paymentMode: 'Online',
-      title: 'Agent-Silver-10',
-      status: 'Success',
-      time: '23 Aug 2018',
-      validTill: '21 Nov 2018',
-      isExpired: true
-    }
-  ];
+  const [activeTab, setActiveTab] = useState('Subscribed Services');
 
   return (
-    <div className="h-full overflow-y-auto no-scrollbar bg-gray-50 relative flex flex-col">
-      {/* Premium Header */}
-      <div className="sticky top-0 bg-white/80 backdrop-blur-md z-30 px-5 pt-8 pb-4 flex items-center justify-between border-b border-gray-100">
-        <div className="flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-2.5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-all active:scale-90">
-            <ArrowLeft size={20} className="text-gray-900" />
-          </button>
-          <div>
-            <h1 className="font-black text-xl text-gray-900 tracking-tight leading-none">Subscriptions</h1>
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1.5">Manage your plans</p>
-          </div>
-        </div>
-        <div className="bg-yellow-50 p-2 rounded-xl">
-           <Crown size={20} className="text-yellow-600" />
-        </div>
+    <div className="h-full overflow-y-auto no-scrollbar bg-[#F8FAFC] relative flex flex-col">
+      {/* Header */}
+      <div className="sticky top-0 bg-white z-20 px-5 py-4 flex items-center border-b border-gray-100 shadow-sm">
+        <button onClick={() => navigate(-1)} className="mr-4 p-2 hover:bg-gray-50 rounded-full transition-colors active:scale-95">
+          <ArrowLeft size={22} className="text-gray-800" />
+        </button>
+        <h1 className="font-black text-xl text-gray-900 tracking-tight">Subscriptions</h1>
       </div>
 
-      <div className="flex-1 pb-24">
-        {/* Horizontal Navigation Tabs */}
-        <div className="px-5 py-4 overflow-x-auto no-scrollbar flex gap-2">
-           {tabs.map((tab) => (
-             <button
-               key={tab.id}
-               onClick={() => setActiveTab(tab.id as TabType)}
-               className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl whitespace-nowrap text-xs font-black transition-all ${
-                 activeTab === tab.id 
-                 ? 'bg-gray-900 text-white shadow-lg shadow-black/10' 
-                 : 'bg-white text-gray-400 border border-gray-100'
-               }`}
-             >
-               <tab.icon size={14} />
-               {tab.label}
-             </button>
-           ))}
-        </div>
+      {/* Tab Navigation (Sidebar-style but mobile friendly horizontal) */}
+      <div className="bg-white px-5 py-3 border-b border-gray-100 flex gap-3 overflow-x-auto no-scrollbar">
+        {TABS.map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-5 py-2.5 rounded-2xl text-[11px] font-black whitespace-nowrap transition-all uppercase tracking-wider ${
+              activeTab === tab
+                ? 'bg-[#E11D48] text-white shadow-lg shadow-[#E11D48]/20'
+                : 'bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-100'
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
 
-        <div className="px-5">
-           <AnimatePresence mode="wait">
-             {activeTab === 'subscribed' && (
-               <motion.div
-                 key="subscribed"
-                 initial={{ opacity: 0, y: 10 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 exit={{ opacity: 0, y: -10 }}
-                 className="space-y-4"
-               >
-                 <div className="flex items-center justify-between px-1 mb-2">
-                    <h2 className="font-black text-sm text-gray-900 uppercase tracking-widest">
-                       Subscribed Services <span className="text-gray-400 ml-1">({subscriptions.length})</span>
-                    </h2>
-                    <button className="text-[10px] font-black text-primary uppercase tracking-widest">Refresh</button>
-                 </div>
+      <div className="flex-1 p-5 pb-24">
+        {activeTab === 'Subscribed Services' ? (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div className="flex justify-between items-center mb-1">
+               <h2 className="font-black text-gray-900 text-sm border-b-2 border-[#E11D48] pb-1 uppercase tracking-tight">Subscribed Services (3)</h2>
+               <button className="text-[10px] font-black text-[#E11D48] flex items-center gap-1">
+                 MANAGE ALL <Layout size={12} />
+               </button>
+            </div>
 
-                 {subscriptions.map((sub, idx) => (
-                   <div 
-                     key={sub.orderId}
-                     className="bg-white rounded-[32px] p-6 border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-md transition-all"
-                   >
-                     <div className="flex justify-between items-start mb-5 relative z-10">
-                        <div>
-                           <div className="flex items-center gap-2 mb-1">
-                              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Order ID</p>
-                              <p className="text-[10px] font-black text-gray-900">#{sub.orderId}</p>
-                           </div>
-                           <h3 className="text-base font-black text-gray-900 leading-tight">{sub.title}</h3>
-                        </div>
-                        <Badge color={sub.isExpired ? 'bg-red-50 text-red-500 border border-red-100' : 'bg-green-50 text-green-500 border border-green-100'}>
-                           {sub.isExpired ? 'Expired' : 'Active'}
-                        </Badge>
-                     </div>
+            {/* Desktop-like Table for Mobile (Card stack) */}
+            <div className="space-y-4">
+              {SERVICES.map((s, idx) => (
+                <motion.div 
+                  key={s.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all relative overflow-hidden group"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="bg-green-50 px-3 py-1.5 rounded-xl border border-green-100">
+                       <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">{s.status}</span>
+                    </div>
+                    <p className="text-[10px] font-bold text-gray-400">Order ID: {s.id}</p>
+                  </div>
 
-                     <div className="grid grid-cols-2 gap-6 mb-5 relative z-10">
-                        <div>
-                           <p className="text-[9px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-1">Status</p>
-                           <div className="flex items-center gap-1.5">
-                              <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                              <p className="text-xs font-black text-gray-700">{sub.status}</p>
-                           </div>
-                        </div>
-                        <div>
-                           <p className="text-[9px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-1">Subscribed On</p>
-                           <div className="flex items-center gap-1.5 text-gray-700">
-                              <Clock size={12} className="text-gray-400" />
-                              <p className="text-xs font-black">{sub.time}</p>
-                           </div>
-                        </div>
-                     </div>
+                  <h3 className="font-black text-gray-900 text-base mb-4 leading-tight uppercase tracking-tight group-hover:text-[#E11D48] transition-colors">{s.title}</h3>
 
-                     <div className="bg-gray-50 rounded-2xl p-4 flex justify-between items-center relative z-10">
-                        <div>
-                           <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-0.5">Valid Till</p>
-                           <p className={`text-xs font-black ${sub.isExpired ? 'text-red-400' : 'text-gray-900'}`}>
-                              {sub.validTill} {sub.isExpired && '( Expired )'}
-                           </p>
-                        </div>
-                        <button className="p-2 bg-white rounded-xl shadow-sm hover:scale-110 transition-transform active:scale-95">
-                           <ChevronRight size={18} className="text-gray-400" />
-                        </button>
-                     </div>
-                   </div>
-                 ))}
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-50">
+                    <div className="space-y-1">
+                       <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Purchase Date</p>
+                       <div className="flex items-center gap-2">
+                         <Clock size={14} className="text-gray-400" />
+                         <p className="text-xs font-bold text-gray-700">{s.time}</p>
+                       </div>
+                    </div>
+                    <div className="space-y-1">
+                       <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Valid Till</p>
+                       <div className="flex items-center gap-2">
+                         <Calendar size={14} className="text-[#E11D48]" />
+                         <p className="text-xs font-black text-[#E11D48]">{s.valid}</p>
+                       </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
 
-                 {/* No more services CTA */}
-                 <div className="pt-4 text-center">
-                    <p className="text-xs text-gray-400 font-medium mb-4">Looking for more features?</p>
-                    <Button fullWidth onClick={() => navigate('/subscription')} className="bg-[#2FED9A] text-gray-900 py-4 shadow-xl shadow-[#2FED9A]/20">
-                       Browse Premium Plans
-                    </Button>
-                 </div>
-               </motion.div>
-             )}
-
-             {activeTab !== 'subscribed' && (
-               <motion.div
-                 key="coming-soon"
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 className="py-20 text-center"
-               >
-                 <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-gray-100">
-                    <Layout size={32} className="text-gray-200" />
-                 </div>
-                 <h3 className="font-black text-gray-900">Module Coming Soon</h3>
-                 <p className="text-xs text-gray-400 mt-1">We are working on bringing this feature to mobile.</p>
-               </motion.div>
-             )}
-           </AnimatePresence>
-        </div>
+            {/* Buy New Section */}
+            <div className="mt-8 bg-gradient-to-br from-[#E11D48] to-[#9F1239] rounded-3xl p-6 text-white shadow-xl shadow-[#E11D48]/20 relative overflow-hidden group">
+               <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+               <div className="relative z-10 flex flex-col gap-4">
+                  <div>
+                    <h4 className="font-black text-lg leading-tight mb-1">Upgrade Your Business</h4>
+                    <p className="text-xs text-white/70 font-medium">Unlock premium features, faster leads, and top search ranking for your listings.</p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    fullWidth 
+                    onClick={() => navigate('/subscription')}
+                    className="bg-white text-[#E11D48] border-none font-black text-xs py-4 rounded-2xl shadow-xl active:scale-95 transition-all"
+                  >
+                    VIEW ALL PLANS
+                  </Button>
+               </div>
+            </div>
+          </motion.div>
+        ) : (
+          <div className="h-full flex flex-col items-center justify-center py-20 text-center">
+             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4 border border-gray-100">
+               <History size={32} className="text-gray-300" />
+             </div>
+             <h4 className="font-black text-gray-900 text-base mb-1 tracking-tight">Coming Soon</h4>
+             <p className="text-xs text-gray-500 max-w-[200px] mx-auto font-medium">{activeTab} section is currently under development.</p>
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
