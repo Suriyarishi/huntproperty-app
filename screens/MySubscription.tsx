@@ -67,6 +67,13 @@ const PLAN_PRICES = {
   platinum: '₹ 9500'
 };
 
+const METALLIC_STYLES: Record<string, string> = {
+  bronze: 'linear-gradient(135deg, #A8704D 0%, #F5D5C0 30%, #D4A373 50%, #8D5B3A 100%)',
+  silver: 'linear-gradient(135deg, #949BA0 0%, #F8F9FA 30%, #C0C4C8 50%, #70777B 100%)',
+  gold: 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 30%, #D4AF37 50%, #AA771C 100%)',
+  platinum: 'linear-gradient(135deg, #1e3a8a 0%, #93c5fd 30%, #3b82f6 50%, #172554 100%)', // Deep Metallic Blue
+};
+
 export const MySubscriptionScreen: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Subscribed Services');
@@ -235,32 +242,44 @@ export const MySubscriptionScreen: React.FC = () => {
             animate={{ opacity: 1 }}
             className="space-y-8"
           >
-            {/* UX Law: Hick's Law - Simplified choice through plan selection */}
-            <div className="bg-white p-6 rounded-[2.5rem] shadow-xl shadow-black/5 border border-gray-100">
-               <h2 className="font-black text-gray-900 text-sm mb-6 uppercase tracking-widest text-center">Compare Subscription Tiers</h2>
+            {/* Plan Comparison Matrix */}
+            <div className="bg-white p-6 rounded-[2.5rem] shadow-xl shadow-black/5 border border-gray-100 relative overflow-hidden">
+               {/* Background Texture Element */}
+               <div className="absolute top-0 right-0 w-64 h-64 opacity-10 pointer-events-none -mr-20 -mt-20">
+                  <div className="w-full h-full rounded-full blur-[100px]" style={{ background: METALLIC_STYLES[comparePlan] }} />
+               </div>
+
+               <h2 className="font-black text-gray-900 text-sm mb-6 uppercase tracking-widest text-center relative z-10">Compare Subscription Tiers</h2>
                
-               <div className="flex justify-between items-center gap-2 mb-8 bg-gray-50 p-2 rounded-2xl border border-gray-100">
+               <div className="flex justify-between items-center gap-2 mb-8 bg-gray-50 p-2 rounded-2xl border border-gray-100 relative z-10">
                   {['bronze', 'silver', 'gold', 'platinum'].map((p) => (
                     <button
                       key={p}
                       onClick={() => setComparePlan(p as any)}
-                      className={`flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all ${
+                      style={{ 
+                        background: comparePlan === p ? METALLIC_STYLES[p] : 'transparent',
+                        boxShadow: comparePlan === p ? '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' : 'none'
+                      }}
+                      className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all relative overflow-hidden ${
                         comparePlan === p 
-                          ? 'bg-gray-900 text-white shadow-lg' 
+                          ? 'text-white border border-white/20' 
                           : 'text-gray-400 hover:text-gray-600'
                       }`}
                     >
-                      {p}
+                      {/* Glossy reflection effect */}
+                      {comparePlan === p && (
+                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-white/0 via-white/30 to-white/0 -skew-x-12 translate-x-[-100%] animate-[shimmer_2s_infinite]" />
+                      )}
+                      <span className="relative z-10">{p}</span>
                     </button>
                   ))}
                </div>
 
-               {/* UX Law: Aesthetic-Usability Effect - Premium Comparison Matrix */}
-               <div className="space-y-8">
+               <div className="space-y-8 relative z-10">
                   {PLAN_FEATURES.map((cat, i) => (
                     <div key={i} className="space-y-4">
                        <h3 className="text-[10px] font-black text-[#E11D48] uppercase tracking-[0.2em] px-2">{cat.category}</h3>
-                       <div className="bg-gray-50/50 rounded-3xl overflow-hidden border border-gray-100">
+                       <div className="bg-gray-50/50 rounded-3xl overflow-hidden border border-gray-100 backdrop-blur-sm">
                           {cat.items.map((item, j) => (
                             <div key={j} className={`flex justify-between items-center p-4 ${j !== cat.items.length - 1 ? 'border-b border-gray-100' : ''}`}>
                                <span className="text-xs font-bold text-gray-600">{item.name}</span>
@@ -276,14 +295,19 @@ export const MySubscriptionScreen: React.FC = () => {
                   ))}
                </div>
 
-               <div className="mt-10 text-center">
+               <div className="mt-10 text-center relative z-10">
                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2">Total Price</p>
-                  <p className="text-3xl font-black text-gray-900 mb-6">{(PLAN_PRICES as any)[comparePlan]}</p>
+                  <div className="flex items-center justify-center gap-1 mb-6">
+                    <span className="text-3xl font-black text-gray-900">{(PLAN_PRICES as any)[comparePlan]}</span>
+                  </div>
+                  
                   <Button 
                     fullWidth 
-                    className="bg-[#E11D48] text-white py-5 rounded-[2rem] shadow-xl shadow-rose-500/30 font-black text-xs uppercase tracking-widest active:scale-95 transition-all"
+                    style={{ background: METALLIC_STYLES[comparePlan] }}
+                    className="text-white py-5 rounded-[2rem] shadow-xl font-black text-xs uppercase tracking-widest active:scale-95 transition-all border border-white/20 relative overflow-hidden"
                   >
-                    PROCEED TO UPGRADE
+                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-white/0 via-white/20 to-white/0 -skew-x-12 translate-x-[-100%] animate-[shimmer_3s_infinite]" />
+                    <span className="relative z-10">PROCEED TO UPGRADE</span>
                   </Button>
                </div>
             </div>
@@ -291,13 +315,42 @@ export const MySubscriptionScreen: React.FC = () => {
         )}
 
         {activeTab === 'Alerts' && (
-          <div className="h-full flex flex-col items-center justify-center py-20 text-center">
-             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4 border border-gray-100">
-               <History size={32} className="text-gray-300" />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="h-full flex flex-col items-center justify-center py-20 text-center px-10"
+          >
+             <div className="relative mb-8">
+                <div className="w-24 h-24 bg-rose-50 rounded-[2rem] flex items-center justify-center relative z-10 border border-rose-100/50 shadow-inner">
+                  <Bell size={40} className="text-[#E11D48]" />
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-100 z-20">
+                   <span className="text-[10px] font-black text-gray-400">0</span>
+                </div>
+                {/* Decorative pulses */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-rose-500/5 rounded-full animate-ping pointer-events-none" />
              </div>
-             <h4 className="font-black text-gray-900 text-base mb-1 tracking-tight">Coming Soon</h4>
-             <p className="text-xs text-gray-500 max-w-[200px] mx-auto font-medium">{activeTab} section is currently under development.</p>
-          </div>
+
+             <h2 className="font-black text-gray-900 text-xl mb-3 tracking-tight uppercase">Subscription Alerts</h2>
+             
+             <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm max-w-[280px]">
+                <p className="text-xs text-gray-500 font-bold leading-relaxed tracking-wide uppercase">
+                   Currently there are no alerts available for this user
+                </p>
+             </div>
+
+             <p className="mt-8 text-[10px] text-gray-400 font-bold max-w-[200px] uppercase tracking-widest leading-loose">
+               We'll notify you here about plan expirations, payment successes, and upcoming renewals.
+             </p>
+
+             <Button 
+                variant="outline"
+                onClick={() => setActiveTab('View Services')}
+                className="mt-10 border-[#E11D48] text-[#E11D48] font-black text-[10px] px-8 py-3 rounded-2xl uppercase tracking-widest hover:bg-rose-50 transition-colors"
+             >
+                Explore Services
+             </Button>
+          </motion.div>
         )}
       </div>
     </div>

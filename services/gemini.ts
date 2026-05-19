@@ -22,7 +22,7 @@ export const generatePropertyDescription = async (
   area: number
 ): Promise<string> => {
   if (!ai) return "AI service not configured.";
-  
+
   try {
     const prompt = `Write a compelling, professional real estate description for a ${bhk} BHK ${type} named "${title}". 
     It is ${area} sqft. Key features: ${features.join(', ')}. 
