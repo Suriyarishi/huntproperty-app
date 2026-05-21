@@ -27,57 +27,65 @@ const ORDERS = [
 
 const PLAN_FEATURES = [
   { 
-    category: 'Core Features',
+    category: 'Marketing & Consultancy',
     items: [
-      { name: 'Free Posting', metal: false, bronze: true, silver: true, gold: true, platinum: true },
-      { name: 'Duration (Days)', metal: 0, bronze: 60, silver: 90, gold: 120, platinum: 150 },
-      { name: 'Number of Listings', metal: 0, bronze: 2, silver: 3, gold: 4, platinum: 4 },
+      { name: 'Project Consultancy', metal: 'NOT AVAILABLE', bronze: '--', silver: '--', gold: '--', platinum: '--' },
+      { name: 'Insta SMS Booster Pack', metal: 'NOT AVAILABLE', bronze: 500000, silver: 500000, gold: 1000000, platinum: 2000000 },
+      { name: 'Insta E-Mail Booster Pack', metal: 'NOT AVAILABLE', bronze: 500000, silver: 500000, gold: 1000000, platinum: 2000000 },
     ]
   },
   {
-    category: 'Media & Content',
+    category: 'Design & Content',
     items: [
-      { name: 'Photos (Upto 5MB)', metal: false, bronze: true, silver: true, gold: true, platinum: true },
-      { name: 'Video Posting', metal: false, bronze: false, silver: false, gold: true, platinum: true },
-      { name: 'Expert Description', metal: false, bronze: false, silver: false, gold: false, platinum: true },
+      { name: 'Property Page Design By Expert', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
+      { name: 'Dedicated Page on Hunt Property Site', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
+      { name: 'Property Showcase in Top Search', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
+      { name: 'Content Writing By Expert', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
+      { name: 'Photo Shoot', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: '--', platinum: 'Yes' },
+      { name: 'Video Shoot', metal: 'NOT AVAILABLE', bronze: '--', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
     ]
   },
   {
-    category: 'Alerts & Support',
+    category: 'Digital Campaigns',
     items: [
-      { name: 'SMS Alerts', metal: false, bronze: false, silver: false, gold: true, platinum: true },
-      { name: 'Email Alerts', metal: false, bronze: false, silver: true, gold: true, platinum: true },
-      { name: 'Chat Option', metal: false, bronze: true, silver: true, gold: true, platinum: true },
+      { name: 'Digital Marketing Pack', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
+      { name: 'Facebook Campaign', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
+      { name: 'Instagram Campaign', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
     ]
   },
   {
-    category: 'Premium Perks',
+    category: 'Features & Limits',
     items: [
-      { name: 'Verified Tag', metal: false, bronze: false, silver: false, gold: false, platinum: true },
-      { name: 'Search Visibility', metal: false, bronze: false, silver: false, gold: false, platinum: true },
-      { name: 'Buyer Contacts', metal: 0, bronze: 0, silver: 0, gold: 1000, platinum: 1000 },
+      { name: 'Duration', metal: 'NOT AVAILABLE', bronze: 30, silver: 30, gold: 30, platinum: 30 },
+      { name: 'Number of Projects Listing', metal: 'NOT AVAILABLE', bronze: 1, silver: 1, gold: 1, platinum: 1 },
+      { name: 'Lead Alert', metal: 'NOT AVAILABLE', bronze: '--', silver: 1000, gold: 1000, platinum: 1000 },
+      { name: 'Intimation By Mail', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
+      { name: 'Intimation By SMS', metal: 'NOT AVAILABLE', bronze: 'Yes', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
+      { name: 'Banner Advertisement', metal: 'NOT AVAILABLE', bronze: '--', silver: 'Yes', gold: 'Yes', platinum: 'Yes' },
     ]
   }
 ];
 
 const PLAN_PRICES = {
-  bronze: '₹ 730',
-  silver: '₹ 2000',
-  gold: '₹ 6500',
-  platinum: '₹ 9500'
+  metal: 'NOT AVAILABLE',
+  bronze: '₹ 1,65,000',
+  silver: '₹ 2,00,000',
+  gold: '₹ 3,50,000',
+  platinum: '₹ 5,00,000'
 };
 
 const METALLIC_STYLES: Record<string, string> = {
+  metal: 'linear-gradient(135deg, #4B5563 0%, #9CA3AF 30%, #6B7280 50%, #374151 100%)',
   bronze: 'linear-gradient(135deg, #A8704D 0%, #F5D5C0 30%, #D4A373 50%, #8D5B3A 100%)',
   silver: 'linear-gradient(135deg, #949BA0 0%, #F8F9FA 30%, #C0C4C8 50%, #70777B 100%)',
   gold: 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 30%, #D4AF37 50%, #AA771C 100%)',
-  platinum: 'linear-gradient(135deg, #1e3a8a 0%, #93c5fd 30%, #3b82f6 50%, #172554 100%)', // Deep Metallic Blue
+  platinum: 'linear-gradient(135deg, #1e3a8a 0%, #93c5fd 30%, #3b82f6 50%, #172554 100%)',
 };
 
 export const MySubscriptionScreen: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Subscribed Services');
-  const [comparePlan, setComparePlan] = useState<'bronze' | 'silver' | 'gold' | 'platinum'>('platinum');
+  const [comparePlan, setComparePlan] = useState<'metal' | 'bronze' | 'silver' | 'gold' | 'platinum'>('platinum');
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -89,10 +97,15 @@ export const MySubscriptionScreen: React.FC = () => {
   };
 
   const renderFeatureValue = (val: any) => {
-    if (typeof val === 'boolean') {
-      return val ? <CheckCircle size={16} className="text-green-500" /> : <AlertCircle size={16} className="text-gray-300" />;
+    if (val === 'Yes' || val === true) {
+      return <CheckCircle size={16} className="text-green-500" />;
     }
-    if (val === 0) return <span className="text-gray-300 font-bold">-</span>;
+    if (val === '--' || val === false || val === 0) {
+      return <span className="text-gray-300 font-bold">-</span>;
+    }
+    if (val === 'NOT AVAILABLE') {
+      return <span className="text-red-400 font-bold text-[9px] uppercase tracking-wider">N/A</span>;
+    }
     return <span className="text-gray-900 font-black">{val}</span>;
   };
 
@@ -252,7 +265,7 @@ export const MySubscriptionScreen: React.FC = () => {
                <h2 className="font-black text-gray-900 text-sm mb-6 uppercase tracking-widest text-center relative z-10">Compare Subscription Tiers</h2>
                
                <div className="flex justify-between items-center gap-2 mb-8 bg-gray-50 p-2 rounded-2xl border border-gray-100 relative z-10">
-                  {['bronze', 'silver', 'gold', 'platinum'].map((p) => (
+                  {['metal', 'bronze', 'silver', 'gold', 'platinum'].map((p) => (
                     <button
                       key={p}
                       onClick={() => setComparePlan(p as any)}
@@ -296,7 +309,7 @@ export const MySubscriptionScreen: React.FC = () => {
                </div>
 
                <div className="mt-10 text-center relative z-10">
-                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2">Total Price</p>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2">Price</p>
                   <div className="flex items-center justify-center gap-1 mb-6">
                     <span className="text-3xl font-black text-gray-900">{(PLAN_PRICES as any)[comparePlan]}</span>
                   </div>

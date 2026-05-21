@@ -9,18 +9,29 @@ import {
 } from 'lucide-react';
 
 interface DrawerProps {
+  user: {
+    email: string;
+    name: string;
+    role: 'agent' | 'developer';
+    avatar: string;
+  } | null;
   isOpen: boolean;
   onClose: () => void;
   onLogout?: () => void;
 }
 
-export const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, onLogout }) => {
+export const Drawer: React.FC<DrawerProps> = ({ user, isOpen, onClose, onLogout }) => {
   const navigate = useNavigate();
 
   const handleNav = (path: string) => {
     navigate(path);
     onClose();
   };
+
+  const profileName = user?.name || "Esther Howard";
+  const profileEmail = user?.email || "abc@gmail.com";
+  const profileAvatar = user?.avatar || "https://picsum.photos/200/200";
+  const profileRoleName = user?.role === 'agent' ? 'Premium Agent' : (user?.role === 'developer' ? 'Project Developer' : 'Free member');
 
   const menuItems = [
     {
@@ -92,15 +103,19 @@ export const Drawer: React.FC<DrawerProps> = ({ isOpen, onClose, onLogout }) => 
 
               <div className="flex items-center gap-4 mt-4">
                 <img
-                  src="https://picsum.photos/200/200"
+                  src={profileAvatar}
                   alt="Profile"
                   className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-md"
                 />
                 <div>
-                  <h2 className="font-bold text-lg text-gray-900 leading-tight">Esther Howard</h2>
-                  <p className="text-xs text-gray-500 mb-1">abc@gmail.com</p>
-                  <span className="px-2 py-0.5 bg-gray-200 text-gray-600 text-[10px] font-bold rounded-md uppercase tracking-wider">
-                    Free member
+                  <h2 className="font-bold text-lg text-gray-900 leading-tight">{profileName}</h2>
+                  <p className="text-xs text-gray-500 mb-1">{profileEmail}</p>
+                  <span className={`px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${
+                    user?.role === 'agent' 
+                      ? 'bg-[#2FED9A]/20 text-green-800' 
+                      : (user?.role === 'developer' ? 'bg-[#00AEEF]/20 text-blue-800' : 'bg-gray-200 text-gray-600')
+                  }`}>
+                    {profileRoleName}
                   </span>
                 </div>
               </div>

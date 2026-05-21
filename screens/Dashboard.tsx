@@ -5,17 +5,28 @@ import { motion } from 'framer-motion';
 import { 
   Plus, Eye, MessageCircle, ChevronRight, Zap, ShieldCheck, Star, 
   BarChart, Settings, Bell, Crown, ArrowUpRight, FileText, Camera, CheckCircle,
-  Building2, Layers, UserCheck, CalendarCheck, Users
+  Building2, Layers, UserCheck, CalendarCheck, Users, User
 } from 'lucide-react';
 import { Button, Badge } from '../components/UI';
 
-export const DashboardScreen = () => {
+export const DashboardScreen = ({ user }: { user?: any }) => {
   const navigate = useNavigate();
 
-  const stats = [
+  const isDev = user?.role === 'developer';
+  const stats = isDev ? [
+    { label: 'Active Projects', value: '5', sub: '2 Under Const.', icon: Building2, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Project Views', value: '4.8k', sub: '+18% vs last', icon: Eye, color: 'text-green-600', bg: 'bg-green-50' },
+    { label: 'RERA Inquiries', value: '112', sub: '24 New', icon: MessageCircle, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'Client Bookings', value: '18', sub: '3 Pending', icon: CalendarCheck, color: 'text-orange-600', bg: 'bg-orange-50' },
+    { label: 'Premium Ads', value: '3', sub: '2 Active', icon: Crown, color: 'text-yellow-600', bg: 'bg-yellow-50' },
+    { label: 'Response Rate', value: '94%', sub: 'Avg. 15m', icon: UserCheck, color: 'text-pink-600', bg: 'bg-pink-50' },
+  ] : [
     { label: 'Total Listings', value: '12', sub: '4 Active', icon: FileText, color: 'text-blue-600', bg: 'bg-blue-50' },
     { label: 'Views (Month)', value: '2.4k', sub: '+12% vs last', icon: Eye, color: 'text-green-600', bg: 'bg-green-50' },
     { label: 'Total Leads', value: '84', sub: '15 New', icon: MessageCircle, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'My Bookings', value: '8', sub: '1 Pending', icon: CalendarCheck, color: 'text-orange-600', bg: 'bg-orange-50' },
+    { label: 'Active Services', value: '3', sub: 'Platinum Plus', icon: Crown, color: 'text-yellow-600', bg: 'bg-yellow-50' },
+    { label: 'Avg. Rating', value: '4.9', sub: '12 Reviews', icon: Star, color: 'text-pink-600', bg: 'bg-pink-50' },
   ];
 
   const dashboardModules = [
@@ -23,6 +34,7 @@ export const DashboardScreen = () => {
     { id: 2, title: 'Properties', desc: 'Manage Properties', icon: Building2, color: 'bg-green-50 text-green-500', path: '/my-listings' },
     { id: 3, title: 'Bookings', desc: 'View Clients', icon: CalendarCheck, color: 'bg-purple-50 text-purple-500', path: '/orders' },
     { id: 4, title: 'Subscriptions', desc: '3 Active Services', icon: Crown, color: 'bg-yellow-50 text-yellow-600', path: '/my-subscription' },
+    { id: 5, title: 'My Profile', desc: 'Edit Details', icon: User, color: 'bg-blue-50 text-blue-500', path: '/edit-profile' },
   ];
 
   const subscribedServices = [
@@ -43,12 +55,12 @@ export const DashboardScreen = () => {
         <div className="flex justify-between items-start mb-6">
           <div className="flex items-center gap-3">
              <div className="relative">
-               <img src="https://picsum.photos/200/200" className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
+               <img src={user?.avatar || "https://picsum.photos/200/200"} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
                <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
              </div>
              <div>
                <p className="text-gray-500 text-xs font-medium uppercase tracking-wider">Welcome back</p>
-               <h1 className="text-xl font-bold text-gray-900">Alex Johnson</h1>
+               <h1 className="text-xl font-bold text-gray-900">{user?.name || "Alex Johnson"}</h1>
              </div>
           </div>
           <div className="flex gap-2">

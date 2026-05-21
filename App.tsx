@@ -600,7 +600,7 @@ const SavedScreen = ({ shortlisted }: { shortlisted: string[] }) => (
 );
 
 // Wrapper manages global state and routing
-const Wrapper = ({ onLogout }: { onLogout: () => void }) => {
+const Wrapper = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [shortlisted, setShortlisted] = useState<string[]>([]);
   const [chats, setChats] = useState<ChatSession[]>([
@@ -673,13 +673,13 @@ const Wrapper = ({ onLogout }: { onLogout: () => void }) => {
 
   return (
     <>
-      <Drawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} onLogout={onLogout} />
+      <Drawer user={user} isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} onLogout={onLogout} />
       <Routes>
         <Route path="/" element={<><HomeScreen onOpenDrawer={() => setIsDrawerOpen(true)} unreadCount={chats.reduce((acc, c) => acc + (c.messages[c.messages.length - 1]?.sender === 'other' && !c.messages[c.messages.length - 1]?.isRead ? 1 : 0), 0)} /><BottomNav /></>} />
         <Route path="/search" element={<><SearchScreen properties={MOCK_PROPERTIES} /><BottomNav /></>} />
         <Route path="/saved" element={<><SavedScreen shortlisted={shortlisted} /><BottomNav /></>} />
-        <Route path="/profile" element={<><DashboardScreen /><BottomNav /></>} />
-        <Route path="/dashboard" element={<><DashboardScreen /><BottomNav /></>} />
+        <Route path="/profile" element={<><DashboardScreen user={user} /><BottomNav /></>} />
+        <Route path="/dashboard" element={<><DashboardScreen user={user} /><BottomNav /></>} />
         <Route path="/property/:id" element={<PropertyDetails properties={MOCK_PROPERTIES} toggleShortlist={toggleShortlist} shortlisted={shortlisted} onStartChat={startChat} />} />
         <Route path="/add" element={<AddProperty properties={USER_PROPERTIES} />} />
         <Route path="/add-project" element={<AddProject />} />
@@ -688,7 +688,7 @@ const Wrapper = ({ onLogout }: { onLogout: () => void }) => {
         <Route path="/chat/:id" element={<ChatDetailScreen chats={chats} onSendMessage={sendMessage} />} />
         <Route path="/contacts" element={<ContactsResponsesScreen />} />
         <Route path="/my-listings" element={<MyListings properties={USER_PROPERTIES} />} />
-        <Route path="/settings" element={<SettingsScreen />} />
+        <Route path="/settings" element={<SettingsScreen onLogout={onLogout} />} />
         <Route path="/edit-profile" element={<EditProfileScreen />} />
         <Route path="/change-password" element={<ChangePasswordScreen />} />
         <Route path="/my-subscription" element={<MySubscriptionScreen />} />
@@ -716,18 +716,33 @@ const Wrapper = ({ onLogout }: { onLogout: () => void }) => {
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{
+    email: string;
+    name: string;
+    role: 'agent' | 'developer';
+    avatar: string;
+  } | null>(null);
 
   const handleSplashFinish = () => {
     setShowSplash(false);
   };
 
-  const handleLogin = () => {
+  const handleLogin = (email: string, role: 'agent' | 'developer') => {
     setIsAuthenticated(true);
+    setUser({
+      email,
+      name: role === 'agent' ? 'Alex Johnson (Agent)' : 'David Lee (Developer)',
+      role,
+      avatar: role === 'agent' 
+        ? 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop'
+        : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop'
+    });
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
+    setUser(null);
   };
 
   return (
@@ -764,7 +779,7 @@ export default function App() {
                 transition={{ duration: 0.5 }}
                 className="h-full w-full"
               >
-                <Wrapper onLogout={handleLogout} />
+                <Wrapper user={user} onLogout={handleLogout} />
               </motion.div>
             )}
           </AnimatePresence>

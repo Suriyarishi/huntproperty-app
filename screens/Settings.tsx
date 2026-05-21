@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { Toggle, Button } from '../components/UI';
 
-export const SettingsScreen: React.FC = () => {
+export const SettingsScreen: React.FC<{ onLogout?: () => void }> = ({ onLogout }) => {
   const navigate = useNavigate();
 
   // Modals State
@@ -200,7 +200,7 @@ export const SettingsScreen: React.FC = () => {
               </p>
               <div className="flex gap-3">
                 <Button variant="ghost" fullWidth onClick={() => setShowLogoutModal(false)} className="bg-gray-100">Cancel</Button>
-                <Button fullWidth onClick={() => { setShowLogoutModal(false); navigate('/'); }}>Log Out</Button>
+                <Button fullWidth onClick={() => { setShowLogoutModal(false); onLogout ? onLogout() : navigate('/'); }}>Log Out</Button>
               </div>
             </motion.div>
           </div>
